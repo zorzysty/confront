@@ -1,0 +1,11 @@
+{
+  "name": "frontconsole",
+  "version": "0.0.1",
+  "description": "Super handy console tool for your web app. No external dependencies.",
+  "main": "src/frontconsole.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "zorzysty",
+  "license": "MIT"
+}
