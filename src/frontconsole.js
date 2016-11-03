@@ -1,4 +1,4 @@
-const FrontConsole = (userConfig) => {
+const FrontConsole = (userConfig, userTasks) => {
 
   const defaultConfig = {
     shortcutActivator: "ctrl", //options: "ctrl", "ctrl+shift", "ctrl+alt"
@@ -8,6 +8,24 @@ const FrontConsole = (userConfig) => {
   const config = Object.assign(
     defaultConfig,
     userConfig
+  )
+
+  const defaultTasks = {
+    "echo": {
+      job: (params) => {
+        console.log(params[0]);
+      }
+    },
+    "add": {
+      job: (params) => {
+        console.log(params[0] + params[1]);
+      }
+    }
+  }
+
+  const tasks = Object.assign(
+    defaultTasks,
+    userTasks
   )
 
   const keyDownHandler = function(event) {
@@ -45,7 +63,8 @@ const FrontConsole = (userConfig) => {
   instantiate();
 
   return {
-    config
+    config,
+    tasks
   }
 
 }

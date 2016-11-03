@@ -14,8 +14,13 @@
       shortcutActivator: "ctrl",
       // shortcutKeyCode: 220,
     }
-    var fc = FrontConsole(config);
+    const tasks = {
+
+    }
+    var fc = FrontConsole(config, tasks);
     console.log(fc);
+    fc.tasks.echo.job(["it will surely work"]);
+    fc.tasks.add.job([1,5]);
   </script>
 
 </body>
