@@ -11,16 +11,22 @@ const FrontConsole = (userConfig, userTasks) => {
   )
 
   const defaultTasks = {
-    "echo": {
+    "echo": {//to be switched by backend command
       job: (params) => {
         console.log(params[0]);
       }
     },
-    "add": {
+    "add": {//just for show
       job: (params) => {
         console.log(params[0] + params[1]);
       }
     }
+    "clear": {//acually useful clientside command 
+      job: () => {
+        console.log(`Clear the console`);
+      }
+    },
+    //todo: "history" based on localstorage
   }
 
   const tasks = Object.assign(
