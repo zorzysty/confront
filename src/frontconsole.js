@@ -1,7 +1,15 @@
 const FrontConsole = (userConfig, userTasks) => {
 
   let consoleDOM = {};
-  let consoleState = {};
+  let consoleState = {
+    history: [],
+    rollback: 0,
+  };
+  let historyFromLocalStorage = JSON.parse(localStorage.getItem('fc-history'));
+
+  if(historyFromLocalStorage && Array.isArray(historyFromLocalStorage)){
+    consoleState.history = historyFromLocalStorage;
+  }
 
   const defaultConfig = {
     shortcutActivator: "ctrl", //options: "ctrl", "ctrl+shift", "ctrl+alt"
@@ -22,19 +30,25 @@ const FrontConsole = (userConfig, userTasks) => {
     },
     "add": {//just for show
       cmd: (params) => {
-        const result = params.reduce((total, number) => parseInt(total) + parseInt(number))
-        console.log(result);
+        const result = params.reduce((total, number) => parseInt(total) + parseInt(number));
         return result;
       },
       desc: "Simply adds to numbers passed as parameters"
     },
     "clear": {//acually useful clientside command
       cmd: () => {
-        console.log(`Clear the console`);
         consoleDOM.outputEl.innerHTML = "";
         return;
       },
       desc: "Clears console"
+    },
+    "clearhistory": {
+      cmd: () => {
+        consoleState.history = [];
+        localStorage.setItem("fc-history", null);
+        return;
+      },
+      desc: "Clears history"
     },
     "help": {//acually useful clientside command
       cmd: () => displayHelp(),
@@ -100,13 +114,28 @@ const FrontConsole = (userConfig, userTasks) => {
     if(consoleDOM.inputEl === document.activeElement){
       switch (event.keyCode){
         case 13:
+          consoleState.rollback = 0;
           executeCmd();
           break;
-        //todo case 38: (up)
-        //todo case 40: (down)
+        case 38:
+          event.preventDefault();
+          if(consoleState.history.length - consoleState.rollback > 0){
+              consoleState.rollback++;
+              consoleDOM.inputEl.value = consoleState.history[consoleState.history.length - consoleState.rollback]
+          }
+          break;
+        case 40:
+          event.preventDefault();
+          if(consoleState.rollback > 1){
+              consoleState.rollback--;
+              consoleDOM.inputEl.value = consoleState.history[consoleState.history.length - consoleState.rollback]
+          } else if(consoleState.rollback === 1){
+              consoleState.rollback = 0
+              consoleDOM.inputEl.value = "";
+          }
+          break;
       }
     }
-
   }
 
   const clickHandler = (event) => {
@@ -116,8 +145,13 @@ const FrontConsole = (userConfig, userTasks) => {
   const executeCmd = () => {
     const inputValue = consoleDOM.inputEl.value.trim();
 
-    consoleDOM.inputEl.value = "";
-    if (inputValue === "") {return;}
+    if (inputValue === "") {
+      return;
+    } else {
+      consoleState.history.push(inputValue);
+      localStorage.setItem("fc-history", JSON.stringify(consoleState.history));
+      consoleDOM.inputEl.value = "";
+    }
 
     const [cmd, ...args] = inputValue.split(" ");
 
@@ -139,7 +173,7 @@ const FrontConsole = (userConfig, userTasks) => {
   }
 
   const printLine = (txt, type) => {
-    console.log("printline: ", txt, type)
+    console.log("printline: ", txt, type? type : "")
     let line = document.createElement("span");
     line.className = `frontconsole-${type? type: "default"}`
     line.innerText = txt;
