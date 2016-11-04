@@ -52,11 +52,11 @@ const FrontConsole = (userConfig, userTasks) => {
     })
   }
 
-  const keyDownHandler = function(event) {
+  const keyDownHandler = (event) => {
     onKeyDown(event);
   }
 
-  const onKeyDown = function(event){
+  const onKeyDown = (event) => {
     let shortcutActivatorEnabled = false;
     switch (config.shortcutActivator){
       case "ctrl":
