@@ -1,0 +1,78 @@
+
+/*Font
+-----------------------------------------------------*/
+.frontconsole, .frontconsole-input
+{
+  font:14px/14px 'Inconsolata-g for Powerline', 'Lucida Console', 'Consolas', 'Courier New' !important;
+}
+
+/*Control
+-----------------------------------------------------*/
+.frontconsole
+{
+  background: rgba(24, 53, 74, .8);
+  height: 300px;
+  position:fixed; bottom:0; left:0; right:0;
+  padding:5px;
+  border-top:solid 1px rgba(255, 255, 255, .3);
+  /*box-shadow:0 0 3px #000, 0 0 8px #000 inset;*/
+  overflow: auto;
+}
+
+
+/*Input
+-----------------------------------------------------*/
+.frontconsole-input
+{
+  display:block; width:100%;
+  background: transparent; border:none;
+  color:#8AE234;
+  margin:0; padding:0;
+  outline:none; /*Chrome*/
+}
+.frontconsole-input::-ms-clear {display: none; } /*Clear button in Edge*/
+
+
+/*Output text
+-----------------------------------------------------*/
+.frontconsole-cmd   {color:#AAA;}
+.frontconsole-error {color:#F00;}
+.frontconsole-ok    {color:#0FF;}
+
+/*Table
+-----------------------------------------------------*/
+.frontconsole-tbl                { color:#8AE234; }
+.frontconsole-tbl td             { padding:2px 5px; }
+.frontconsole-tbl td:first-child { padding-left: 0; }
+
+.frontconsole-lbl { color: #D3D7CF; }
+.frontconsole-val { color: #525753; }
+
+/*Busy animation
+-----------------------------------------------------*/
+.frontconsole-busy
+{
+  width:24px; height:24px;
+
+  border-radius: 50%;
+  border-top: 2px solid #03ade0;
+  border-right: 2px solid transparent;
+
+  margin: 4px 0;
+
+  animation: spin .6s linear infinite;
+}
+
+@keyframes spin
+{
+  to { transform: rotate(360deg); }
+}
+
+body, html {
+  padding: 0;
+  margin: 0;
+}
+
+img{
+  max-width: 100%
+}
