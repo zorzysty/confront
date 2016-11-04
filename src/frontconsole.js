@@ -15,25 +15,25 @@ const FrontConsole = (userConfig, userTasks) => {
 
   const defaultTasks = {
     "echo": {//to be switched by backend command
-      job: (params) => {
+      cmd: (params) => {
         console.log(params[0]);
       },
       desc: "Returns provided parameter"
     },
     "add": {//just for show
-      job: (params) => {
-        console.log(params[0] + params[1]);
+      cmd: (params) => {
+        console.log(params.reduce((total, number) => parseInt(total) + parseInt(number)));
       },
       desc: "Simply adds to numbers passed as parameters"
     },
     "clear": {//acually useful clientside command
-      job: () => {
+      cmd: () => {
         console.log(`Clear the console`);
       },
       desc: "Clears console"
     },
     "help": {//acually useful clientside command
-      job: () => displayHelp(),
+      cmd: () => displayHelp(),
       desc: "This help"
     },
     //todo: "history" based on localstorage
@@ -53,10 +53,6 @@ const FrontConsole = (userConfig, userTasks) => {
   }
 
   const keyDownHandler = (event) => {
-    onKeyDown(event);
-  }
-
-  const onKeyDown = (event) => {
     let shortcutActivatorEnabled = false;
     switch (config.shortcutActivator){
       case "ctrl":
@@ -85,6 +81,40 @@ const FrontConsole = (userConfig, userTasks) => {
         consoleDOM.ctrlEl.style.display = "none";
       }
 
+    }
+
+    if(consoleState.busy) {
+      return;
+    }
+
+    if(consoleDOM.inputEl === document.activeElement){
+      switch (event.keyCode){
+        case 13:
+          executeCmd();
+          break;
+        //todo case 38: (up)
+        //todo case 40: (down)
+      }
+    }
+
+  }
+
+  const clickHandler = (event) => {
+    setFocus();
+  }
+
+  const executeCmd = () => {
+    const inputValue = consoleDOM.inputEl.value.trim();
+
+    consoleDOM.inputEl.value = "";
+    if (inputValue === "") {return;}
+
+    const [cmd, ...args] = inputValue.split(" ");
+
+    if(tasks[cmd]){
+      tasks[cmd].cmd(args);
+    } else {
+      //todo: display error "no such command"
     }
   }
 
@@ -133,6 +163,7 @@ const FrontConsole = (userConfig, userTasks) => {
       createDOMElements();
       setBusy(false);
       document.addEventListener('keydown', keyDownHandler);
+      consoleDOM.ctrlEl.addEventListener('click', clickHandler);
   }
 
   instantiate();

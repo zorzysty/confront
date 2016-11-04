@@ -22,17 +22,17 @@
     }
     const tasks = {
       "process": {
-        job: () => process(),
+        cmd: () => process(),
         desc: "Processes something",
       }
     }
     var fc = FrontConsole(config, tasks);
     window.fc = fc;
     console.log(fc);
-    fc.tasks.echo.job(["it will surely work"]);
-    fc.tasks.add.job([1,5]);
-    fc.tasks.process.job();
-    fc.tasks.help.job();
+    fc.tasks.echo.cmd(["it will surely work"]);
+    fc.tasks.add.cmd([1,5]);
+    fc.tasks.process.cmd();
+    fc.tasks.help.cmd();
   </script>
 
 </body>
