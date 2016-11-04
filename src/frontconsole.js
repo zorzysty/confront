@@ -54,7 +54,6 @@ const FrontConsole = (userConfig, userTasks) => {
       cmd: () => displayHelp(),
       desc: "This help"
     },
-    //todo: "history" based on localstorage
   }
 
   const tasks = Object.assign(
@@ -148,13 +147,23 @@ const FrontConsole = (userConfig, userTasks) => {
     if (inputValue === "") {
       return;
     } else {
-      consoleState.history.push(inputValue);
-      localStorage.setItem("fc-history", JSON.stringify(consoleState.history));
+      if(inputValue !== consoleState.history[consoleState.history.length - 1]){
+        consoleState.history.push(inputValue);
+        localStorage.setItem("fc-history", JSON.stringify(consoleState.history));
+      }
       consoleDOM.inputEl.value = "";
       printLine(inputValue, "cmd");
     }
 
-    const [cmd, ...args] = inputValue.split(" ");
+
+    //todo: to be refactored start:
+    let commandParts = inputValue.match(/[^\s"]+|"[^"]*"/g);
+    console.log(commandParts);
+    commandParts.map(part => part.replace(/"/g), '');
+    console.log(commandParts);
+    //end
+
+    const [cmd, ...args] = commandParts;
 
     if(tasks[cmd]){
       const cmdResult = tasks[cmd].cmd(args);
@@ -174,19 +183,24 @@ const FrontConsole = (userConfig, userTasks) => {
   }
 
   const printLine = (txt, type) => {
-    console.log("printline: ", txt, type? type : "")
     let line = document.createElement("span");
     line.className = `frontconsole-${type? type: "default"}`;
     (type === "cmd")? txt = `> ${txt}`: txt;
     line.innerText = txt;
     consoleDOM.outputEl.appendChild(line);
     consoleDOM.outputEl.appendChild(document.createElement("br"));
+    scrollToBottom();
   }
 
   const printHTML = (html) => {
     let lines = document.createElement("div");
     lines.innerHTML = html;
     consoleDOM.outputEl.appendChild(lines);
+    scrollToBottom();
+  }
+
+  const scrollToBottom = () => {
+    consoleDOM.ctrlEl.scrollTop = consoleDOM.ctrlEl.scrollHeight;
   }
 
   const createDOMElements = () => {
