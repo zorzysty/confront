@@ -22,13 +22,17 @@ const FrontConsole = (userConfig, userTasks) => {
     },
     "add": {//just for show
       cmd: (params) => {
-        console.log(params.reduce((total, number) => parseInt(total) + parseInt(number)));
+        const result = params.reduce((total, number) => parseInt(total) + parseInt(number))
+        console.log(result);
+        return result;
       },
       desc: "Simply adds to numbers passed as parameters"
     },
     "clear": {//acually useful clientside command
       cmd: () => {
         console.log(`Clear the console`);
+        consoleDOM.outputEl.innerHTML = "";
+        return;
       },
       desc: "Clears console"
     },
@@ -45,11 +49,17 @@ const FrontConsole = (userConfig, userTasks) => {
   )
 
   const displayHelp = () => {
+    const tableStart = '<table class="frontconsole-tbl">';
+    const tableEnd = "</table>";
+    let rows = [];
     Object.keys(tasks).forEach((key)=>{
       const name = key;
       const desc = tasks[key].desc;
-      console.log(`${name}: ${desc? desc : ""}`)
+      console.log(`${name}: ${desc? desc : ""}`);
+      rows.push(`<tr><td class="frontconsole-lbl">${name}: </td><td class="frontconsole-val"> ${desc? desc : ""}</td>`);
     })
+    const result = tableStart + rows.sort().join("") + tableEnd;
+    return {html: result}
   }
 
   const keyDownHandler = (event) => {
@@ -112,10 +122,35 @@ const FrontConsole = (userConfig, userTasks) => {
     const [cmd, ...args] = inputValue.split(" ");
 
     if(tasks[cmd]){
-      tasks[cmd].cmd(args);
+      const cmdResult = tasks[cmd].cmd(args);
+
+      if(cmdResult !== undefined){
+
+        if(typeof cmdResult !== 'object'){
+          printLine(String(cmdResult));
+        } else if(cmdResult.html){
+          printHTML(cmdResult.html);
+        }
+      }
     } else {
-      //todo: display error "no such command"
+        printLine("No such command", "error");
+        return;
     }
+  }
+
+  const printLine = (txt, type) => {
+    console.log("printline: ", txt, type)
+    let line = document.createElement("span");
+    line.className = `frontconsole-${type? type: "default"}`
+    line.innerText = txt;
+    consoleDOM.outputEl.appendChild(line);
+    consoleDOM.outputEl.appendChild(document.createElement("br"));
+  }
+
+  const printHTML = (html) => {
+    let lines = document.createElement("div");
+    lines.innerHTML = html;
+    consoleDOM.outputEl.appendChild(lines);
   }
 
   const createDOMElements = () => {
