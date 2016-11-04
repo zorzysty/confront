@@ -24,7 +24,7 @@ const FrontConsole = (userConfig, userTasks) => {
   const defaultTasks = {
     "echo": {//to be switched by backend command
       cmd: (params) => {
-        console.log(params[0]);
+        return params[0];
       },
       desc: "Returns provided parameter"
     },
@@ -46,7 +46,7 @@ const FrontConsole = (userConfig, userTasks) => {
       cmd: () => {
         consoleState.history = [];
         localStorage.setItem("fc-history", null);
-        return;
+        return "History cleared";
       },
       desc: "Clears history"
     },
@@ -151,6 +151,7 @@ const FrontConsole = (userConfig, userTasks) => {
       consoleState.history.push(inputValue);
       localStorage.setItem("fc-history", JSON.stringify(consoleState.history));
       consoleDOM.inputEl.value = "";
+      printLine(inputValue, "cmd");
     }
 
     const [cmd, ...args] = inputValue.split(" ");
@@ -175,7 +176,8 @@ const FrontConsole = (userConfig, userTasks) => {
   const printLine = (txt, type) => {
     console.log("printline: ", txt, type? type : "")
     let line = document.createElement("span");
-    line.className = `frontconsole-${type? type: "default"}`
+    line.className = `frontconsole-${type? type: "default"}`;
+    (type === "cmd")? txt = `> ${txt}`: txt;
     line.innerText = txt;
     consoleDOM.outputEl.appendChild(line);
     consoleDOM.outputEl.appendChild(document.createElement("br"));
