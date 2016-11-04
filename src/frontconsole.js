@@ -76,10 +76,12 @@ const FrontConsole = (userConfig, userTasks) => {
         break;
     }
     if (shortcutActivatorEnabled && event.keyCode === config.shortcutKeyCode){
-      console.log("open!");
       if(consoleDOM.ctrlEl.style.display === "none"){
+        console.log("open!");
         consoleDOM.ctrlEl.style.display = "block";
+        setFocus();
       } else {
+        console.log("close!");
         consoleDOM.ctrlEl.style.display = "none";
       }
 
@@ -123,13 +125,13 @@ const FrontConsole = (userConfig, userTasks) => {
   }
 
   const setFocus = () => {
+    console.log('setFocus called')
       consoleDOM.inputEl.focus();
   }
 
   const instantiate = () => {
       createDOMElements();
       setBusy(false);
-      setFocus();
       document.addEventListener('keydown', keyDownHandler);
   }
 
