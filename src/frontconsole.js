@@ -22,20 +22,7 @@ const FrontConsole = (userConfig, userTasks) => {
   )
 
   const defaultTasks = {
-    "echo": {//to be switched by backend command
-      cmd: (params) => {
-        return params[0];
-      },
-      desc: "Returns provided parameter"
-    },
-    "add": {//just for show
-      cmd: (params) => {
-        const result = params.reduce((total, number) => parseInt(total) + parseInt(number));
-        return result;
-      },
-      desc: "Simply adds to numbers passed as parameters"
-    },
-    "clear": {//acually useful clientside command
+    "clear": {
       cmd: () => {
         consoleDOM.outputEl.innerHTML = "";
         return;
@@ -50,7 +37,7 @@ const FrontConsole = (userConfig, userTasks) => {
       },
       desc: "Clears history"
     },
-    "help": {//acually useful clientside command
+    "help": {
       cmd: () => displayHelp(),
       desc: "This help"
     },
