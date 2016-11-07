@@ -161,8 +161,8 @@ const FrontConsole = (userConfig, userTasks) => {
       if(isCmdAPromise){
           setBusy(true);
           cmdResult
-            .then((result) => {
-              printResult(result, checkType(result.type)); //todo: check result type
+            .then((promiseResult) => {
+              printResult(promiseResult, checkType(cmdResultType, promiseResult));
               setBusy(false);
             })
             .catch((err) => {
@@ -170,7 +170,7 @@ const FrontConsole = (userConfig, userTasks) => {
               setBusy(false);
             });
       } else {
-        printResult(cmdResult, checkType(cmdResultType))
+        printResult(cmdResult, checkType(cmdResultType, cmdResult))
       }
     } else {
         printLine("No such command", "error");
@@ -191,7 +191,7 @@ const FrontConsole = (userConfig, userTasks) => {
     }
   }
 
-  const checkType = (cmdResultType) => {
+  const checkType = (cmdResultType, cmdResult) => {
     if(!cmdResultType){//if no type provided, try to guess
       if(typeof cmdResult !== 'object'){
         return "default";
