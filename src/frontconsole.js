@@ -24,16 +24,16 @@ const FrontConsole = (userConfig, userTasks) => {
   const defaultTasks = {
     "clear": {
       cmd: () => clearConsole(),
-      desc: "Clears console"
+      desc: "Clears console",
     },
     "clearhistory": {
       cmd: () => clearHistory(),
-      desc: "Clears history"
+      desc: "Clears history",
     },
     "help": {
       cmd: () => displayHelp(),
       desc: "This help",
-      // type: "html",
+      type: "html",
     },
   }
 
@@ -60,7 +60,6 @@ const FrontConsole = (userConfig, userTasks) => {
     Object.keys(tasks).forEach((key)=>{
       const name = key;
       const desc = tasks[key].desc;
-      // console.log(`${name}: ${desc? desc : ""}`);
       rows.push(`<tr><td class="frontconsole-lbl">${name}: </td><td class="frontconsole-val"> ${desc? desc : ""}</td>`);
     })
     const result = tableStart + rows.sort().join("") + tableEnd;
@@ -145,16 +144,12 @@ const FrontConsole = (userConfig, userTasks) => {
       printLine(inputValue, "cmd");
     }
 
-    //todo: to be refactored start:
+    //group params by double quotes
     let commandParts = inputValue.match(/[^\s"]+|"[^"]*"/g);
-    // console.log(commandParts);
-    commandParts.map(part => part.replace(/"/g), '');
-    // console.log(commandParts);
-    //end
-
+    commandParts = commandParts.map(str => str.replace(/"/g, ''));
     const [cmd, ...args] = commandParts;
 
-    if(tasks[cmd]){//if command exists
+    if(tasks[cmd]){ //if command exists
       const cmdResult = tasks[cmd].cmd(args);
       let cmdResultType = tasks[cmd].type;
 
@@ -198,7 +193,7 @@ const FrontConsole = (userConfig, userTasks) => {
   }
 
   const checkType = (cmdResultType, cmdResult) => {
-    if(!cmdResultType){//if no type is provided
+    if(!cmdResultType){ //if no type is provided
       if(typeof cmdResult === "string"
               && cmdResult[0]==="<"
               && cmdResult[cmdResult.length - 1] === ">"){
@@ -211,6 +206,7 @@ const FrontConsole = (userConfig, userTasks) => {
     }
   }
 
+  //todo: trim of "
   const printLine = (txt, type) => {
     let line = document.createElement("pre");
     line.className = `frontconsole-${type? type: "default"}`;

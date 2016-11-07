@@ -44,12 +44,10 @@
         cmd: () => process(),
         desc: "Processes something",
       },
-      // "echo": {
-      //   cmd: (params) => {
-      //     return params[0];
-      //   },
-      //   desc: "Returns provided parameter"
-      // },
+      "echo": {
+        cmd: (params) => params[0],
+        desc: "Returns provided parameter"
+      },
       "add": {
         cmd: (params) => {
           const result = params.reduce((total, number) => parseInt(total) + parseInt(number));
@@ -64,9 +62,7 @@
         desc: "returns promise (fullfilled)"
       },
       "rejectme": {
-        cmd: (params) => {
-          return rejectme();
-        },
+        cmd: (params) => rejectme(),
         desc: "returns promise (rejected)"
       },
     }
