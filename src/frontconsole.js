@@ -158,21 +158,11 @@ const FrontConsole = (userConfig, userTasks) => {
       let cmdResultType = tasks[cmd].type;
       let isCmdAPromise = typeof cmdResult.then === "function";
 
-      if(!cmdResultType){//if no type provided, try to guess
-        if(typeof cmdResult !== 'object'){
-          cmdResultType = "default";
-        } else if (cmdResult.html) {
-          cmdResultType = "html"
-        } else {
-          cmdResultType = "default"
-        }
-      }
-
       if(isCmdAPromise){
           setBusy(true);
           cmdResult
             .then((result) => {
-              printLine(String(result));
+              printResult(result, checkType(result.type)); //todo: check result type
               setBusy(false);
             })
             .catch((err) => {
@@ -180,23 +170,38 @@ const FrontConsole = (userConfig, userTasks) => {
               setBusy(false);
             });
       } else {
-        switch (cmdResultType){
-          case "default": {
-            printLine(JSON.stringify(cmdResult, undefined, 2));
-            break;
-          }
-          case "html": {
-            printHTML(cmdResult.html);
-             break;
-          }
-        }
+        printResult(cmdResult, checkType(cmdResultType))
       }
-
-
-
     } else {
         printLine("No such command", "error");
         return;
+    }
+  }
+
+  const printResult = (result, resultType) => {
+    switch (resultType){
+      case "default": {
+        printLine(JSON.stringify(result, undefined, 2));
+        break;
+      }
+      case "html": {
+        printHTML(result.html);
+         break;
+      }
+    }
+  }
+
+  const checkType = (cmdResultType) => {
+    if(!cmdResultType){//if no type provided, try to guess
+      if(typeof cmdResult !== 'object'){
+        return "default";
+      } else if (cmdResult.html) {
+        return "html"
+      } else {
+        return "default"
+      }
+    } else {
+      return cmdResultType;
     }
   }
 
