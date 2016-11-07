@@ -23,24 +23,17 @@ const FrontConsole = (userConfig, userTasks) => {
 
   const defaultTasks = {
     "clear": {
-      cmd: () => {
-        consoleDOM.outputEl.innerHTML = "";
-        return;
-      },
+      cmd: () => clearConsole(),
       desc: "Clears console"
     },
     "clearhistory": {
-      cmd: () => {
-        consoleState.history = [];
-        localStorage.setItem("fc-history", null);
-        return "History cleared";
-      },
+      cmd: () => clearHistory(),
       desc: "Clears history"
     },
     "help": {
       cmd: () => displayHelp(),
       desc: "This help",
-      resultType: "html"
+      // type: "html",
     },
   }
 
@@ -49,6 +42,17 @@ const FrontConsole = (userConfig, userTasks) => {
     userTasks
   )
 
+  const clearConsole = () => {
+    consoleDOM.output.innerHTML = "";
+    return;
+  }
+
+  const clearHistory = () => {
+      consoleState.history = [];
+      localStorage.setItem("fc-history", null);
+      return "History cleared";
+  }
+
   const displayHelp = () => {
     const tableStart = '<table class="frontconsole-tbl">';
     const tableEnd = "</table>";
@@ -56,11 +60,11 @@ const FrontConsole = (userConfig, userTasks) => {
     Object.keys(tasks).forEach((key)=>{
       const name = key;
       const desc = tasks[key].desc;
-      console.log(`${name}: ${desc? desc : ""}`);
+      // console.log(`${name}: ${desc? desc : ""}`);
       rows.push(`<tr><td class="frontconsole-lbl">${name}: </td><td class="frontconsole-val"> ${desc? desc : ""}</td>`);
     })
     const result = tableStart + rows.sort().join("") + tableEnd;
-    return {html: result}
+    return result;
   }
 
   const keyDownHandler = (event) => {
@@ -82,43 +86,41 @@ const FrontConsole = (userConfig, userTasks) => {
             }
         break;
     }
+
     if (shortcutActivatorEnabled && event.keyCode === config.shortcutKeyCode){
-      if(consoleDOM.ctrlEl.style.display === "none"){
-        console.log("open!");
-        consoleDOM.ctrlEl.style.display = "block";
+      if(consoleDOM.wrapper.style.display === "none"){
+        consoleDOM.wrapper.style.display = "block";
         setFocus();
       } else {
-        console.log("close!");
-        consoleDOM.ctrlEl.style.display = "none";
+        consoleDOM.wrapper.style.display = "none";
       }
-
     }
 
     if(consoleState.busy) {
       return;
     }
 
-    if(consoleDOM.inputEl === document.activeElement){
+    if(consoleDOM.input === document.activeElement){
       switch (event.keyCode){
-        case 13:
+        case 13: //enter/return
           consoleState.rollback = 0;
           executeCmd();
           break;
-        case 38:
+        case 38: //up
           event.preventDefault();
           if(consoleState.history.length - consoleState.rollback > 0){
               consoleState.rollback++;
-              consoleDOM.inputEl.value = consoleState.history[consoleState.history.length - consoleState.rollback]
+              consoleDOM.input.value = consoleState.history[consoleState.history.length - consoleState.rollback]
           }
           break;
-        case 40:
+        case 40: //down
           event.preventDefault();
           if(consoleState.rollback > 1){
               consoleState.rollback--;
-              consoleDOM.inputEl.value = consoleState.history[consoleState.history.length - consoleState.rollback]
+              consoleDOM.input.value = consoleState.history[consoleState.history.length - consoleState.rollback]
           } else if(consoleState.rollback === 1){
               consoleState.rollback = 0
-              consoleDOM.inputEl.value = "";
+              consoleDOM.input.value = "";
           }
           break;
       }
@@ -130,7 +132,7 @@ const FrontConsole = (userConfig, userTasks) => {
   }
 
   const executeCmd = () => {
-    const inputValue = consoleDOM.inputEl.value.trim();
+    const inputValue = consoleDOM.input.value.trim();
 
     if (inputValue === "") {
       return;
@@ -139,10 +141,9 @@ const FrontConsole = (userConfig, userTasks) => {
         consoleState.history.push(inputValue);
         localStorage.setItem("fc-history", JSON.stringify(consoleState.history));
       }
-      consoleDOM.inputEl.value = "";
+      consoleDOM.input.value = "";
       printLine(inputValue, "cmd");
     }
-
 
     //todo: to be refactored start:
     let commandParts = inputValue.match(/[^\s"]+|"[^"]*"/g);
@@ -156,6 +157,11 @@ const FrontConsole = (userConfig, userTasks) => {
     if(tasks[cmd]){//if command exists
       const cmdResult = tasks[cmd].cmd(args);
       let cmdResultType = tasks[cmd].type;
+
+      if(!cmdResult){
+        return;
+      }
+
       let isCmdAPromise = typeof cmdResult.then === "function";
 
       if(isCmdAPromise){
@@ -185,17 +191,17 @@ const FrontConsole = (userConfig, userTasks) => {
         break;
       }
       case "html": {
-        printHTML(result.html);
+        printHTML(result);
          break;
       }
     }
   }
 
   const checkType = (cmdResultType, cmdResult) => {
-    if(!cmdResultType){//if no type provided, try to guess
-      if(typeof cmdResult !== 'object'){
-        return "default";
-      } else if (cmdResult.html) {
+    if(!cmdResultType){//if no type is provided
+      if(typeof cmdResult === "string"
+              && cmdResult[0]==="<"
+              && cmdResult[cmdResult.length - 1] === ">"){
         return "html"
       } else {
         return "default"
@@ -208,73 +214,66 @@ const FrontConsole = (userConfig, userTasks) => {
   const printLine = (txt, type) => {
     let line = document.createElement("pre");
     line.className = `frontconsole-${type? type: "default"}`;
-    (type === "cmd")? txt = `> ${txt}`: txt;
+    (type === "cmd")? txt = `> ${txt}`: txt; //prepend < sign if printing command
     line.innerText = txt;
-    consoleDOM.outputEl.appendChild(line);
-    // consoleDOM.outputEl.appendChild(document.createElement("br"));
+    consoleDOM.output.appendChild(line);
     scrollToBottom();
   }
 
   const printHTML = (html) => {
     let lines = document.createElement("div");
     lines.innerHTML = html;
-    consoleDOM.outputEl.appendChild(lines);
+    consoleDOM.output.appendChild(lines);
     scrollToBottom();
   }
 
   const scrollToBottom = () => {
-    consoleDOM.ctrlEl.scrollTop = consoleDOM.ctrlEl.scrollHeight;
+    consoleDOM.wrapper.scrollTop = consoleDOM.wrapper.scrollHeight;
   }
 
   const createDOMElements = () => {
 
-      //Create & store CLI elements
-      consoleDOM.ctrlEl   = document.createElement("div");   //CLI control (outer frame)
-      consoleDOM.outputEl = document.createElement("div");   //Div holding console output
-      consoleDOM.inputEl  = document.createElement("input"); //Input control
-      consoleDOM.busyEl   = document.createElement("div");   //Busy animation
+      consoleDOM.wrapper   = document.createElement("div");
+      consoleDOM.output = document.createElement("div");
+      consoleDOM.input  = document.createElement("input");
+      consoleDOM.spinner   = document.createElement("div");
 
-      //Add classes
-      consoleDOM.ctrlEl.className   = "frontconsole";
-      consoleDOM.outputEl.className = "frontconsole-output";
-      consoleDOM.inputEl.className  = "frontconsole-input";
-      consoleDOM.busyEl.className   = "frontconsole-busy";
+      consoleDOM.wrapper.className   = "frontconsole";
+      consoleDOM.output.className = "frontconsole-output";
+      consoleDOM.input.className  = "frontconsole-input";
+      consoleDOM.spinner.className   = "frontconsole-spinner";
 
-      //Add attribute
-      consoleDOM.inputEl.setAttribute("spellcheck", "false");
+      consoleDOM.wrapper.appendChild(consoleDOM.output);
+      consoleDOM.wrapper.appendChild(consoleDOM.input);
+      consoleDOM.wrapper.appendChild(consoleDOM.spinner);
 
-      //Assemble them
-      consoleDOM.ctrlEl.appendChild(consoleDOM.outputEl);
-      consoleDOM.ctrlEl.appendChild(consoleDOM.inputEl);
-      consoleDOM.ctrlEl.appendChild(consoleDOM.busyEl);
+      consoleDOM.input.setAttribute("spellcheck", "false");
 
-      //Hide ctrl & add to DOM
-      consoleDOM.ctrlEl.style.display = "none";
-      document.body.appendChild(consoleDOM.ctrlEl);
+      consoleDOM.wrapper.style.display = "none";
+      document.body.appendChild(consoleDOM.wrapper);
   }
 
   const setBusy = (param) => {
     consoleState.busy = param;
     if (consoleState.busy){
-      consoleDOM.busyEl.style.display = "block";
-      consoleDOM.inputEl.style.display = "none";
+      consoleDOM.spinner.style.display = "block";
+      consoleDOM.input.style.display = "none";
     } else {
-      consoleDOM.busyEl.style.display = "none";
-      consoleDOM.inputEl.style.display = "block";
+      consoleDOM.spinner.style.display = "none";
+      consoleDOM.input.style.display = "block";
       setFocus();
     }
   }
 
   const setFocus = () => {
-    console.log('setFocus called')
-      consoleDOM.inputEl.focus();
+      consoleDOM.input.focus();
   }
 
   const instantiate = () => {
       createDOMElements();
       setBusy(false);
       document.addEventListener('keydown', keyDownHandler);
-      consoleDOM.ctrlEl.addEventListener('click', clickHandler);
+      consoleDOM.wrapper.addEventListener('click', clickHandler);
   }
 
   instantiate();
@@ -284,5 +283,4 @@ const FrontConsole = (userConfig, userTasks) => {
     tasks,
     consoleDOM
   }
-
 }
