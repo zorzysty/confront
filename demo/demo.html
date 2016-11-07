@@ -16,6 +16,15 @@
     function process(){
       console.log("process result")
     }
+    function promiseme(){
+      console.log("promiseme called");
+      let result = new Promise((resolve, reject) => {
+         setTimeout(function(){
+           resolve("result from promise")
+         }, 3000)
+      })
+      return result;
+    }
     const config = {
       shortcutActivator: "ctrl",
       // shortcutKeyCode: 220,
@@ -38,14 +47,21 @@
         },
         desc: "Simply adds to numbers passed as parameters"
       },
+      "promiseme": {
+        cmd: (params) => {
+          return promiseme();
+        },
+        desc: "returns promise"
+      }
     }
     var fc = FrontConsole(config, tasks);
     window.fc = fc;
     console.log(fc);
-    fc.tasks.echo.cmd(["it will surely work"]);
-    fc.tasks.add.cmd([1,5]);
-    fc.tasks.process.cmd();
-    fc.tasks.help.cmd();
+    // fc.tasks.echo.cmd(["it will surely work"]);
+    // fc.tasks.add.cmd([1,5]);
+    // fc.tasks.process.cmd();
+    // fc.tasks.help.cmd();
+    // fc.tasks.promiseme.cmd();
   </script>
 
 </body>

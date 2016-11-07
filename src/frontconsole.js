@@ -156,9 +156,14 @@ const FrontConsole = (userConfig, userTasks) => {
       const cmdResult = tasks[cmd].cmd(args);
 
       if(cmdResult !== undefined){
-
         if(typeof cmdResult !== 'object'){
           printLine(String(cmdResult));
+        } else if(typeof cmdResult.then === "function"){
+          setBusy(true);
+          cmdResult.then((result)=>{
+            printLine(String(result));
+            setBusy(false);
+          })
         } else if(cmdResult.html){
           printHTML(cmdResult.html);
         }
@@ -221,8 +226,11 @@ const FrontConsole = (userConfig, userTasks) => {
     consoleState.busy = param;
     if (consoleState.busy){
       consoleDOM.busyEl.style.display = "block";
+      consoleDOM.inputEl.style.display = "none";
     } else {
       consoleDOM.busyEl.style.display = "none";
+      consoleDOM.inputEl.style.display = "block";
+      setFocus();
     }
   }
 
