@@ -39,7 +39,8 @@ const FrontConsole = (userConfig, userTasks) => {
     },
     "help": {
       cmd: () => displayHelp(),
-      desc: "This help"
+      desc: "This help",
+      resultType: "html"
     },
   }
 
@@ -145,29 +146,54 @@ const FrontConsole = (userConfig, userTasks) => {
 
     //todo: to be refactored start:
     let commandParts = inputValue.match(/[^\s"]+|"[^"]*"/g);
-    console.log(commandParts);
+    // console.log(commandParts);
     commandParts.map(part => part.replace(/"/g), '');
-    console.log(commandParts);
+    // console.log(commandParts);
     //end
 
     const [cmd, ...args] = commandParts;
 
-    if(tasks[cmd]){
+    if(tasks[cmd]){//if command exists
       const cmdResult = tasks[cmd].cmd(args);
+      let cmdResultType = tasks[cmd].type;
+      let isCmdAPromise = typeof cmdResult.then === "function";
 
-      if(cmdResult !== undefined){
+      if(!cmdResultType){//if no type provided, try to guess
         if(typeof cmdResult !== 'object'){
-          printLine(String(cmdResult));
-        } else if(typeof cmdResult.then === "function"){
-          setBusy(true);
-          cmdResult.then((result)=>{
-            printLine(String(result));
-            setBusy(false);
-          })
-        } else if(cmdResult.html){
-          printHTML(cmdResult.html);
+          cmdResultType = "default";
+        } else if (cmdResult.html) {
+          cmdResultType = "html"
+        } else {
+          cmdResultType = "default"
         }
       }
+
+      if(isCmdAPromise){
+          setBusy(true);
+          cmdResult
+            .then((result) => {
+              printLine(String(result));
+              setBusy(false);
+            })
+            .catch((err) => {
+              printLine(String(err), "error");
+              setBusy(false);
+            });
+      } else {
+        switch (cmdResultType){
+          case "default": {
+            printLine(JSON.stringify(cmdResult, undefined, 2));
+            break;
+          }
+          case "html": {
+            printHTML(cmdResult.html);
+             break;
+          }
+        }
+      }
+
+
+
     } else {
         printLine("No such command", "error");
         return;
@@ -175,12 +201,12 @@ const FrontConsole = (userConfig, userTasks) => {
   }
 
   const printLine = (txt, type) => {
-    let line = document.createElement("span");
+    let line = document.createElement("pre");
     line.className = `frontconsole-${type? type: "default"}`;
     (type === "cmd")? txt = `> ${txt}`: txt;
     line.innerText = txt;
     consoleDOM.outputEl.appendChild(line);
-    consoleDOM.outputEl.appendChild(document.createElement("br"));
+    // consoleDOM.outputEl.appendChild(document.createElement("br"));
     scrollToBottom();
   }
 

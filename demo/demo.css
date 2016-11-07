@@ -64,6 +64,11 @@
   animation: spin .6s linear infinite;
 }
 
+.frontconsole-output > pre {
+  margin-top: 3px;
+  margin-bottom: 3px;
+}
+
 @keyframes spin
 {
   to { transform: rotate(360deg); }

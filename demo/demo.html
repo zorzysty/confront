@@ -14,16 +14,26 @@
   <script src="../src/frontconsole.js"></script>
   <script>
     function process(){
-      console.log("process result")
+      return {
+        "aaa": 22,
+         "ss": 4
+     }
+      // return ['dsada', "dsadsada", '222', {"aaa": 22, "ss": 4}]
     }
     function promiseme(){
-      console.log("promiseme called");
-      let result = new Promise((resolve, reject) => {
+      return new Promise((resolve, reject) => {
          setTimeout(function(){
-           resolve("result from promise")
-         }, 3000)
+           resolve("result from promise");
+         }, 2000)
       })
       return result;
+    }
+    function rejectme(){
+      return new Promise((resolve, reject) => {
+         setTimeout(function(){
+           reject("reject from promise");
+         }, 2000)
+      })
     }
     const config = {
       shortcutActivator: "ctrl",
@@ -51,8 +61,14 @@
         cmd: (params) => {
           return promiseme();
         },
-        desc: "returns promise"
-      }
+        desc: "returns promise (fullfilled)"
+      },
+      "rejectme": {
+        cmd: (params) => {
+          return rejectme();
+        },
+        desc: "returns promise (rejected)"
+      },
     }
     var fc = FrontConsole(config, tasks);
     window.fc = fc;
