@@ -147,10 +147,20 @@ const FrontConsole = (userConfig, userTasks) => {
     //group params by double quotes
     let commandParts = inputValue.match(/[^\s"]+|"[^"]*"/g);
     commandParts = commandParts.map(str => str.replace(/"/g, ''));
-    const [cmd, ...args] = commandParts;
+    const [cmd, ...params] = commandParts;
+
+    const args = params.filter((param) => param[0] !== "-");
+
+    try {
+      var {shortModifiers, longModifiers} = getModifiers(params);
+    }
+    catch (err) {
+      printLine(err, "error");
+      return;
+    }
 
     if(tasks[cmd]){ //if command exists
-      const cmdResult = tasks[cmd].cmd(args);
+      const cmdResult = tasks[cmd].cmd(args, shortModifiers, longModifiers);
       let cmdResultType = tasks[cmd].type;
 
       if(!cmdResult){
@@ -177,6 +187,24 @@ const FrontConsole = (userConfig, userTasks) => {
         printLine("No such command", "error");
         return;
     }
+  }
+
+  const getModifiers = (params) => { //todo: refactor this
+    const allModifiers = params.filter((param) => param[0] === "-");
+    const shortModifiersGroups = allModifiers
+                          .filter((mod) => mod[1] && mod[1] !== "-");
+    let shortModifiers = [];
+    if (shortModifiersGroups.length > 1) {
+      throw ('More than one short modifiers group. Combine them into one group')
+    } else if (shortModifiersGroups.length === 1){
+      shortModifiers = shortModifiersGroups[0]
+                        .split('')
+                        .filter(shortMod => shortMod !== "-");
+    }
+    const longModifiers = allModifiers
+                          .filter((mod) => mod[1] && mod[1] === "-")
+                          .map(str => str.replace(/^-{2,}/, ''));
+    return {shortModifiers, longModifiers};
   }
 
   const printResult = (result, resultType) => {

@@ -49,8 +49,13 @@
         desc: "Returns provided parameters"
       },
       "add": {
-        cmd: (params) => {
-          const result = params.reduce((total, number) => parseInt(total) + parseInt(number));
+        cmd: (params, shortMods, longMods) => {
+          let result;
+          if (shortMods.indexOf('a') > -1 || longMods.indexOf('all') > -1){
+            result = params.reduce((total, number) => parseInt(total) + parseInt(number));
+          } else {
+            result = parseInt(params[0]) + parseInt(params[1]); //all parameters are strings
+          }
           return result;
         },
         desc: "Simply adds to numbers passed as parameters"
