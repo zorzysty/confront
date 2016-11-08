@@ -132,24 +132,19 @@ const FrontConsole = (userTasks, userConfig) => {
 
   const executeCmd = () => {
     const inputValue = consoleDOM.input.value.trim();
+    if (inputValue === "") {return; }
 
-    if (inputValue === "") {
-      return;
-    } else {
-      if(inputValue !== consoleState.history[consoleState.history.length - 1]){
-        consoleState.history.push(inputValue);
-        localStorage.setItem("fc-history", JSON.stringify(consoleState.history));
-      }
-      consoleDOM.input.value = "";
-      printLine(inputValue, "cmd");
-    }
+    saveHistory(inputValue);
+    consoleDOM.input.value = "";
+    printLine(inputValue, "cmd");
 
-    //group params by double quotes
-    let commandParts = inputValue.match(/[^\s"]+|"[^"]*"/g);
-    commandParts = commandParts.map(str => str.replace(/"/g, ''));
-    const [cmd, ...params] = commandParts;
-
+    const [cmd, ...params] = extractCommandParts(inputValue);
     const args = params.filter((param) => param[0] !== "-");
+
+    if(!tasks[cmd]){
+      printLine(`Command '${cmd}' not found`, "error");
+      return;
+    }
 
     try {
       var {shortModifiers, longModifiers} = getModifiers(params);
@@ -159,45 +154,45 @@ const FrontConsole = (userTasks, userConfig) => {
       return;
     }
 
-    if(tasks[cmd]){ //if command exists
-      //todo: move block to separate function?
-      try{
-        var cmdResult = tasks[cmd]
-        .cmd(
-          args,
-          [...shortModifiers, ...longModifiers],
-          shortModifiers,
-          longModifiers
-        );
-      }
-      catch (err){
-        printLine(err, "error");
-        return;
-      }
-
-      if(!cmdResult){return;}
-
-      let cmdResultType = tasks[cmd].type;
-      let isCmdAPromise = typeof cmdResult.then === "function";
-
-      if(isCmdAPromise){
-          setBusy(true);
-          cmdResult
-            .then((promiseResult) => {
-              printResult(promiseResult, checkType(cmdResultType, promiseResult));
-              setBusy(false);
-            })
-            .catch((err) => {
-              printLine(String(err), "error");
-              setBusy(false);
-            });
-      } else {
-        printResult(cmdResult, checkType(cmdResultType, cmdResult))
-      }
-    } else {
-        printLine("No such command", "error");
-        return;
+    try {
+      var cmdResult = tasks[cmd].cmd(args, shortModifiers, longModifiers);
     }
+    catch (err){
+      printLine(err, "error");
+      return;
+    }
+
+    if(!cmdResult){ return; }
+
+    let cmdResultType = tasks[cmd].type;
+    let isCmdAPromise = typeof cmdResult.then === "function";
+
+    if(isCmdAPromise){
+        setBusy(true);
+        cmdResult
+          .then((promiseResult) => {
+            printResult(promiseResult, checkType(cmdResultType, promiseResult));
+            setBusy(false);
+          })
+          .catch((err) => {
+            printLine(String(err), "error");
+            setBusy(false);
+          });
+    } else {
+      printResult(cmdResult, checkType(cmdResultType, cmdResult))
+    }
+  }
+
+  const saveHistory = (inputValue) => {
+    if(inputValue !== consoleState.history[consoleState.history.length - 1]){
+      consoleState.history.push(inputValue);
+      localStorage.setItem("fc-history", JSON.stringify(consoleState.history));
+    }
+  }
+
+  const extractCommandParts = (inputValue) => {
+    const commandParts = inputValue.match(/[^\s"]+|"[^"]*"/g);
+    return commandParts.map(str => str.replace(/"/g, ''));
   }
 
   const getModifiers = (params) => {

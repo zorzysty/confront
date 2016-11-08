@@ -20,7 +20,7 @@
      }
       // return ['dsada', "dsadsada", '222', {"aaa": 22, "ss": 4}]
     }
-    function add(params, mods, shortMods, longMods) {
+    function add(params, shortMods, longMods) {
       if (shortMods.indexOf('a') > -1 || longMods.indexOf('all') > -1){
         return params.reduce((total, number) => parseInt(total) + parseInt(number));
       } else {
@@ -62,8 +62,8 @@
         desc: "Returns provided parameters"
       },
       "add": {
-        cmd: (params, mods, shortMods, longMods) => add(params, mods, shortMods, longMods),
-        desc: "Simply adds to numbers passed as parameters"
+        cmd: (params, shortMods, longMods) => add(params, shortMods, longMods),
+        desc: "Simply sums numbers passed as parameters"
       },
       "promiseme": {
         cmd: (params) => {
