@@ -1,4 +1,4 @@
-const FrontConsole = (userConfig, userTasks) => {
+const FrontConsole = (userTasks, userConfig) => {
 
   let consoleDOM = {};
   let consoleState = {
@@ -160,19 +160,24 @@ const FrontConsole = (userConfig, userTasks) => {
     }
 
     if(tasks[cmd]){ //if command exists
-      const cmdResult = tasks[cmd]
-                      .cmd(
-                          args,
-                          [...shortModifiers, ...longModifiers],
-                          shortModifiers,
-                          longModifiers
-                        );
-      let cmdResultType = tasks[cmd].type;
-
-      if(!cmdResult){
+      //todo: move block to separate function?
+      try{
+        var cmdResult = tasks[cmd]
+        .cmd(
+          args,
+          [...shortModifiers, ...longModifiers],
+          shortModifiers,
+          longModifiers
+        );
+      }
+      catch (err){
+        printLine(err, "error");
         return;
       }
 
+      if(!cmdResult){return;}
+
+      let cmdResultType = tasks[cmd].type;
       let isCmdAPromise = typeof cmdResult.then === "function";
 
       if(isCmdAPromise){
@@ -195,11 +200,11 @@ const FrontConsole = (userConfig, userTasks) => {
     }
   }
 
-  const getModifiers = (params) => { //todo: refactor this
+  const getModifiers = (params) => {
     const allModifiers = params.filter((param) => param[0] === "-");
-    const shortModifiersGroups = allModifiers
-                          .filter((mod) => mod[1] && mod[1] !== "-");
+    const shortModifiersGroups = allModifiers.filter((mod) => mod[1] && mod[1] !== "-");
     let shortModifiers = [];
+
     if (shortModifiersGroups.length > 1) {
       throw ('More than one short modifiers group. Combine them into one group')
     } else if (shortModifiersGroups.length === 1){
@@ -207,6 +212,7 @@ const FrontConsole = (userConfig, userTasks) => {
                         .split('')
                         .filter(shortMod => shortMod !== "-");
     }
+
     const longModifiers = allModifiers
                           .filter((mod) => mod[1] && mod[1] === "-")
                           .map(str => str.replace(/^-{2,}/, ''));
@@ -233,8 +239,8 @@ const FrontConsole = (userConfig, userTasks) => {
   const checkType = (cmdResultType, cmdResult) => {
     if(!cmdResultType){ //if no type is provided
       if(typeof cmdResult === "string"
-              && cmdResult[0]==="<"
-              && cmdResult[cmdResult.length - 1] === ">"){
+         && cmdResult[0] === "<"
+         && cmdResult[cmdResult.length - 1] === ">"){
         return "html"
       } else {
         return "default"
