@@ -160,7 +160,13 @@ const FrontConsole = (userConfig, userTasks) => {
     }
 
     if(tasks[cmd]){ //if command exists
-      const cmdResult = tasks[cmd].cmd(args, shortModifiers, longModifiers);
+      const cmdResult = tasks[cmd]
+                      .cmd(
+                          args,
+                          [...shortModifiers, ...longModifiers],
+                          shortModifiers,
+                          longModifiers
+                        );
       let cmdResultType = tasks[cmd].type;
 
       if(!cmdResult){

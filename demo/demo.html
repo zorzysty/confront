@@ -49,7 +49,7 @@
         desc: "Returns provided parameters"
       },
       "add": {
-        cmd: (params, shortMods, longMods) => {
+        cmd: (params, mods, shortMods, longMods) => {
           let result;
           if (shortMods.indexOf('a') > -1 || longMods.indexOf('all') > -1){
             result = params.reduce((total, number) => parseInt(total) + parseInt(number));
