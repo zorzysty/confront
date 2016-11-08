@@ -1,4 +1,4 @@
-# WebCLI
+# FrontConsole
 
 Super handy console-like CLI for any kind of web app. No external dependencies.
 
@@ -30,11 +30,11 @@ Super handy console-like CLI for any kind of web app. No external dependencies.
 
 ## Versioning
 
-WebCLI uses [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/zorzysty/webcli/tags). 
+WebCLI uses [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/zorzysty/webcli/tags).
 
 ## Authors
 
-* **zorza** 
+* **zorza**
 
 See also the list of [contributors](https://github.com/zorzysty/webcli/contributors) who participated in this project.
 
