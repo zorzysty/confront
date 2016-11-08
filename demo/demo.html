@@ -45,7 +45,7 @@
         desc: "Processes something",
       },
       "echo": {
-        cmd: (params) => params[0],
+        cmd: (params) => params.reduce((a,b) => `${a}; ${b}`),
         desc: "Returns provided parameter"
       },
       "add": {

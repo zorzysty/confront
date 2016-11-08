@@ -182,7 +182,11 @@ const FrontConsole = (userConfig, userTasks) => {
   const printResult = (result, resultType) => {
     switch (resultType){
       case "default": {
-        printLine(JSON.stringify(result, undefined, 2));
+        if (typeof result === "object"){
+          printLine(JSON.stringify(result, undefined, 2));
+        } else {
+          printLine(result)
+        }
         break;
       }
       case "html": {
@@ -205,8 +209,7 @@ const FrontConsole = (userConfig, userTasks) => {
       return cmdResultType;
     }
   }
-
-  //todo: trim of "
+  
   const printLine = (txt, type) => {
     let line = document.createElement("pre");
     line.className = `frontconsole-${type? type: "default"}`;
