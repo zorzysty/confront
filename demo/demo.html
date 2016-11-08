@@ -16,10 +16,11 @@
     function process(){
       return {
         "aaa": 22,
-         "ss": 4
+        "ss": 4,
+        "arr": ['dsada', "dsadsada", '222', {"aaa": 22, "ss": 4}]
      }
-      // return ['dsada', "dsadsada", '222', {"aaa": 22, "ss": 4}]
     }
+
     function add(params, shortMods, longMods) {
       if (shortMods.indexOf('a') > -1 || longMods.indexOf('all') > -1){
         return params.reduce((total, number) => parseInt(total) + parseInt(number));
@@ -27,6 +28,7 @@
         return parseInt(params[0]) + parseInt(params[1]); //all parameters are strings
       }
     }
+
     function promiseme(){
       return new Promise((resolve, reject) => {
          setTimeout(function(){
@@ -34,6 +36,7 @@
          }, 2000)
       })
     }
+
     function rejectme(){
       return new Promise((resolve, reject) => {
          setTimeout(function(){
@@ -41,6 +44,7 @@
          }, 2000)
       })
     }
+
     function echo (params){
       if (params.length){
         return params.reduce((a,b) => `${a}; ${b}`)
@@ -48,10 +52,12 @@
         throw "Echo needs at least one parameter"
       }
     }
+
     const config = {
       shortcutActivator: "ctrl",
       // shortcutKeyCode: 220,
     }
+
     const tasks = {
       "process": {
         cmd: () => process(),
@@ -66,16 +72,15 @@
         desc: "Simply sums numbers passed as parameters"
       },
       "promiseme": {
-        cmd: (params) => {
-          return promiseme();
-        },
+        cmd: () => promiseme(),
         desc: "returns promise (fullfilled)"
       },
       "rejectme": {
-        cmd: (params) => rejectme(),
+        cmd: () => rejectme(),
         desc: "returns promise (rejected)"
       },
     }
+
     var fc = FrontConsole(tasks, config);
     window.fc = fc;
     console.log(fc);

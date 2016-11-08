@@ -195,6 +195,12 @@ const FrontConsole = (userTasks, userConfig) => {
     return commandParts.map(str => str.replace(/"/g, ''));
   }
 
+  /*
+  * todo: change so that modifiers (long and short) may have their own params
+  * todo: short modifiers may or may not be grouped
+  * todo: for example: add 3 4 -a -b -cd --version 4 --all
+  * todo: guess param types from string (number, bool)
+  */
   const getModifiers = (params) => {
     const allModifiers = params.filter((param) => param[0] === "-");
     const shortModifiersGroups = allModifiers.filter((mod) => mod[1] && mod[1] !== "-");
