@@ -209,7 +209,7 @@ const FrontConsole = (userConfig, userTasks) => {
       return cmdResultType;
     }
   }
-  
+
   const printLine = (txt, type) => {
     let line = document.createElement("pre");
     line.className = `frontconsole-${type? type: "default"}`;
