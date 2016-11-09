@@ -1,5 +1,5 @@
 .frontconsole, .frontconsole-input {
-	font: 12px/12px 'Inconsolata-g for Powerline', 'Lucida Console', 'Consolas', 'Courier New' !important;
+	font: 12px/12px 'Inconsolata-g for Powerline', Inconsolata, 'Consolas', 'Courier New', Courier, 'Lucida Console', Monaco, monospace !important;
 }
 
 .frontconsole {
