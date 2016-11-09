@@ -1,11 +1,11 @@
-const FrontConsole = (userTasks, userConfig) => {
+const FrontConsole = (userTasks, userConfig, userTranslation) => {
 
   let consoleDOM = {};
   let consoleState = {
     history: [],
     rollback: 0,
   };
-  let historyFromLocalStorage = JSON.parse(localStorage.getItem('fc-history'));
+  let historyFromLocalStorage = JSON.parse(localStorage.getItem("fc-history"));
 
   if(historyFromLocalStorage && Array.isArray(historyFromLocalStorage)){
     consoleState.history = historyFromLocalStorage;
@@ -19,18 +19,28 @@ const FrontConsole = (userTasks, userConfig) => {
 
   const config = Object.assign(defaultConfig, userConfig);
 
+  const defaultTranslation = {
+    "desc.clear": "Clears console",
+    "desc.clearHistory": "Clears hstory",
+    "desc.help": "This help",
+    "err.cmdNotFound": "Command not found",
+    "historyCleared": "History cleared",
+  }
+
+  const translation = Object.assign(defaultTranslation, userTranslation);
+
   const defaultTasks = {
     "clear": {
       cmd: () => clearConsole(),
-      desc: "Clears console",
+      desc: translation["desc.clear"],
     },
     "clearhistory": {
       cmd: () => clearHistory(),
-      desc: "Clears history",
+      desc: translation["desc.clearHistory"],
     },
     "help": {
       cmd: () => displayHelp(),
-      desc: "This help",
+      desc: translation["desc.help"],
       type: "html",
     },
   }
@@ -45,11 +55,11 @@ const FrontConsole = (userTasks, userConfig) => {
   const clearHistory = () => {
       consoleState.history = [];
       localStorage.setItem("fc-history", null);
-      return "History cleared";
+      return translation["historyCleared"];
   }
 
   const displayHelp = () => {
-    const tableStart = '<table class="frontconsole-table">';
+    const tableStart = `<table class="frontconsole-table">`;
     const tableEnd = "</table>";
     let rows = [];
     Object.keys(tasks).forEach((key)=>{
@@ -136,7 +146,7 @@ const FrontConsole = (userTasks, userConfig) => {
     const [cmd, ...params] = extractCommandParts(inputValue);
 
     if(!tasks[cmd]){
-      printLine(`Command '${cmd}' not found`, "error");
+      printLine(translation["err.cmdNotFound"], "error");
       return;
     }
 
@@ -343,8 +353,8 @@ const FrontConsole = (userTasks, userConfig) => {
   const instantiate = () => {
       createDOMElements();
       setBusy(false);
-      document.addEventListener('keydown', keyDownHandler);
-      consoleDOM.wrapper.addEventListener('click', clickHandler);
+      document.addEventListener("keydown", keyDownHandler);
+      consoleDOM.wrapper.addEventListener("click", clickHandler);
   }
 
   instantiate();

@@ -62,6 +62,10 @@
       // convertTypes: false,
     }
 
+    const translation = {
+      "err.cmdNotFound": "Command was not found"
+    }
+
     const tasks = {
       "process": {
         cmd: () => process(),
@@ -85,7 +89,7 @@
       },
     }
 
-    var fc = FrontConsole(tasks, config);
+    var fc = FrontConsole(tasks, config, translation);
     window.fc = fc;
     console.log(fc);
   </script>
