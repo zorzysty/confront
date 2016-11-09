@@ -42,12 +42,12 @@
 
 /*Table
 -----------------------------------------------------*/
-.frontconsole-tbl                { color:#8AE234; }
-.frontconsole-tbl td             { padding:2px 5px; }
-.frontconsole-tbl td:first-child { padding-left: 0; }
+.frontconsole-table                { color:#8AE234; }
+.frontconsole-table td             { padding:2px 5px; }
+.frontconsole-table td:first-child { padding-left: 0; }
 
-.frontconsole-lbl { color: #D3D7CF; }
-.frontconsole-val { color: #B3B3B3; }
+.frontconsole-label { color: #D3D7CF; }
+.frontconsole-value { color: #B3B3B3; }
 
 /*Busy animation
 -----------------------------------------------------*/

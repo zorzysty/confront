@@ -49,13 +49,13 @@ const FrontConsole = (userTasks, userConfig) => {
   }
 
   const displayHelp = () => {
-    const tableStart = '<table class="frontconsole-tbl">';
+    const tableStart = '<table class="frontconsole-table">';
     const tableEnd = "</table>";
     let rows = [];
     Object.keys(tasks).forEach((key)=>{
       const name = key;
       const desc = tasks[key].desc;
-      rows.push(`<tr><td class="frontconsole-lbl">${name}: </td><td class="frontconsole-val"> ${desc? desc : ""}</td>`);
+      rows.push(`<tr><td class="frontconsole-label">${name}: </td><td class="frontconsole-value"> ${desc? desc : ""}</td>`);
     })
     const result = tableStart + rows.sort().join("") + tableEnd;
     return result;
@@ -245,11 +245,8 @@ const FrontConsole = (userTasks, userConfig) => {
     if (str.match(/^[+-]?([0-9]*[.])?[0-9]+$/)){
       return parseFloat(str)
     }
-    if(str === "false"){
-      return false
-    }
-    if(str === "true"){
-      return true
+    if(str.toLowerCase() === "false" || str.toLowerCase() === "true"){
+      return str === "true"
     }
     return str;
   }
