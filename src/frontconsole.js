@@ -13,13 +13,11 @@ const FrontConsole = (userTasks, userConfig) => {
 
   const defaultConfig = {
     shortcutActivator: "ctrl", //options: "ctrl", "ctrl+shift", "ctrl+alt"
-    shortcutKeyCode: 192
+    shortcutKeyCode: 192,
+    convertTypes: true,
   }
 
-  const config = Object.assign(
-    defaultConfig,
-    userConfig
-  )
+  const config = Object.assign(defaultConfig, userConfig);
 
   const defaultTasks = {
     "clear": {
@@ -37,10 +35,7 @@ const FrontConsole = (userTasks, userConfig) => {
     },
   }
 
-  const tasks = Object.assign(
-    defaultTasks,
-    userTasks
-  )
+  const tasks = Object.assign(defaultTasks, userTasks);
 
   const clearConsole = () => {
     consoleDOM.output.innerHTML = "";
@@ -139,7 +134,6 @@ const FrontConsole = (userTasks, userConfig) => {
     printLine(inputValue, "cmd");
 
     const [cmd, ...params] = extractCommandParts(inputValue);
-    const args = params.filter((param) => param[0] !== "-");
 
     if(!tasks[cmd]){
       printLine(`Command '${cmd}' not found`, "error");
@@ -147,7 +141,7 @@ const FrontConsole = (userTasks, userConfig) => {
     }
 
     try {
-      var {shortModifiers, longModifiers} = getModifiers(params);
+      var {args, shortFlags, longFlags} = getArgsAndFlags(params);
     }
     catch (err) {
       printLine(err, "error");
@@ -155,7 +149,7 @@ const FrontConsole = (userTasks, userConfig) => {
     }
 
     try {
-      var cmdResult = tasks[cmd].cmd(args, shortModifiers, longModifiers);
+      var cmdResult = tasks[cmd].cmd(args, shortFlags, longFlags);
     }
     catch (err){
       printLine(err, "error");
@@ -195,29 +189,69 @@ const FrontConsole = (userTasks, userConfig) => {
     return commandParts.map(str => str.replace(/"/g, ''));
   }
 
-  /*
-  * todo: change so that modifiers (long and short) may have their own params
-  * todo: short modifiers may or may not be grouped
-  * todo: for example: add 3 4 -a -b -cd --version 4 --all
-  * todo: guess param types from string (number, bool)
-  */
-  const getModifiers = (params) => {
-    const allModifiers = params.filter((param) => param[0] === "-");
-    const shortModifiersGroups = allModifiers.filter((mod) => mod[1] && mod[1] !== "-");
-    let shortModifiers = [];
+  const getArgsAndFlags = (params) => {
+    let args = [];
+    let shortFlags = {};
+    let longFlags = {};
+    let argsLoaded = false;
+    let lastFlag = "";
 
-    if (shortModifiersGroups.length > 1) {
-      throw ('More than one short modifiers group. Combine them into one group')
-    } else if (shortModifiersGroups.length === 1){
-      shortModifiers = shortModifiersGroups[0]
-                        .split('')
-                        .filter(shortMod => shortMod !== "-");
+    params.forEach(param => {
+      const isFlag = param[0] === "-";
+
+      if(!argsLoaded && !isFlag){
+        args.push(guessType(param));
+        return;
+      }
+
+      if (isFlag) {
+        argsLoaded = true;
+
+        if(param[1] === "-"){ // -- flag
+          const flag = param.replace(/^--/, '')
+          longFlags[flag] = [];
+          lastFlag = flag;
+          lastFlagType = "long";
+          return;
+        } else { // -flag
+          const shortFlagsGroup = param.replace(/-/, '').split('');
+          shortFlagsGroup.forEach((flag) => {
+            shortFlags[flag] = []
+          })
+          lastFlag = shortFlagsGroup[shortFlagsGroup.length - 1];
+          lastFlagType = "short";
+        }
+
+      }
+
+      if (argsLoaded && !isFlag){
+
+        if(lastFlagType === "short"){
+          shortFlags[lastFlag].push(guessType(param));
+        } else {
+          longFlags[lastFlag].push(guessType(param));
+        }
+      }
+
+    })
+
+    return {args, shortFlags, longFlags};
+  }
+
+  const guessType = (str) => {
+    if(!config.convertTypes){
+      return str;
     }
-
-    const longModifiers = allModifiers
-                          .filter((mod) => mod[1] && mod[1] === "-")
-                          .map(str => str.replace(/^-{2,}/, ''));
-    return {shortModifiers, longModifiers};
+    if (str.match(/^[+-]?([0-9]*[.])?[0-9]+$/)){
+      return parseFloat(str)
+    }
+    if(str === "false"){
+      return false
+    }
+    if(str === "true"){
+      return true
+    }
+    return str;
   }
 
   const printResult = (result, resultType) => {

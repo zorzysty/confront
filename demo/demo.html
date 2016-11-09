@@ -21,11 +21,14 @@
      }
     }
 
-    function add(params, shortMods, longMods) {
-      if (shortMods.indexOf('a') > -1 || longMods.indexOf('all') > -1){
-        return params.reduce((total, number) => parseInt(total) + parseInt(number));
+    function add(args, shortFlags, longFlags) {
+      if(args.length < 2){
+        throw "At least 2 arguments required";
+      }
+      if (shortFlags['a'] || longFlags['all']){
+        return args.reduce((total, number) => total + number);
       } else {
-        return parseInt(params[0]) + parseInt(params[1]); //all parameters are strings
+        return args[0] + args[1]; //all parameters are strings
       }
     }
 
@@ -45,9 +48,9 @@
       })
     }
 
-    function echo (params){
-      if (params.length){
-        return params.reduce((a,b) => `${a}; ${b}`)
+    function echo (args){
+      if (args.length){
+        return args.reduce((a,b) => `${a}; ${b}`)
       } else {
         throw "Echo needs at least one parameter"
       }
@@ -56,6 +59,7 @@
     const config = {
       shortcutActivator: "ctrl",
       // shortcutKeyCode: 220,
+      // convertTypes: false,
     }
 
     const tasks = {
@@ -64,11 +68,11 @@
         desc: "Processes something",
       },
       "echo": {
-        cmd: (params) => echo(params),
+        cmd: (args) => echo(args),
         desc: "Returns provided parameters"
       },
       "add": {
-        cmd: (params, shortMods, longMods) => add(params, shortMods, longMods),
+        cmd: (args, shortFlags, longFlags) => add(args, shortFlags, longFlags),
         desc: "Simply sums numbers passed as parameters"
       },
       "promiseme": {
