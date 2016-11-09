@@ -1,66 +1,8 @@
-.frontconsole, .frontconsole-input {
-  font: 12px/12px 'Inconsolata-g for Powerline', 'Lucida Console', 'Consolas', 'Courier New' !important;
-}
-
-.frontconsole {
-  background: rgba(24, 53, 74, .8);
-  height: 230px;
-  position:fixed; bottom:0; left:0; right:0;
-  padding:5px;
-  border-top:solid 1px rgba(255, 255, 255, .3);
-  overflow: auto;
-}
-
-.frontconsole-input {
-  height: 20px;
-  width:100%;
-  display:block;
-  color:#8AE234;
-  background: transparent;
-  border:none;
-  margin:0;
-  padding:0;
-  outline:none;
-}
-
-.frontconsole-input::-ms-clear {display: none; }
-
-.frontconsole-cmd {color:#AAA;}
-.frontconsole-error {color:#F00;}
-.frontconsole-ok {color:#0FF;}
-.frontconsole-default {color:#0FF;}
-
-.frontconsole-table { color:#8AE234; }
-.frontconsole-table td { padding:2px 5px; }
-.frontconsole-table td:first-child { padding-left: 0; }
-
-.frontconsole-label { color: #D3D7CF; }
-.frontconsole-value { color: #B3B3B3; }
-
-.frontconsole-spinner {
-  width:18px;
-  height:18px;
-  border: 2px solid rgba(138, 226, 52, 0.2);
-  border-top: 2px solid rgba(138, 226, 52, 1);
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-
-.frontconsole-output > pre {
-  margin-top: 3px;
-  margin-bottom: 3px;
-}
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
 body, html {
-  padding: 0;
-  margin: 0;
+	padding: 0;
+	margin: 0;
 }
 
-img{
-  max-width: 100%;
+img {
+	max-width: 100%;
 }
