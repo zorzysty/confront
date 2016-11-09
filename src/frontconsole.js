@@ -22,7 +22,7 @@ const FrontConsole = (userTasks, userConfig, userTranslation) => {
 
 	const defaultTranslation = {
 		"desc.clear": "Clears console",
-		"desc.clearHistory": "Clears hstory",
+		"desc.clearHistory": "Clears history",
 		"desc.help": "This help",
 		"err.cmdNotFound": "Command not found",
 		"historyCleared": "History cleared",
