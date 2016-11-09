@@ -1,5 +1,4 @@
-// eslint-disable-next-line no-unused-vars
-const FrontConsole = (userTasks, userConfig, userTranslation) => {
+const FrontConsole = (userTasks, userConfig, userTranslation) => { // eslint-disable-line no-unused-vars
 
 	let consoleDOM = {};
 	let consoleState = {
