@@ -227,7 +227,7 @@ const FrontConsole = (userTasks, userConfig, userTranslation) => { // eslint-dis
 					lastFlagType = "long";
 					return;
 				} else { // -flag
-					const shortFlagsGroup = param.replace(/-/, "").split("");
+					const shortFlagsGroup = param.replace(/^-/, "").split("");
 					shortFlagsGroup.forEach((flag) => {
 						shortFlags[flag] = [];
 					});
