@@ -24,10 +24,9 @@
 	margin: 0;
 	padding: 0;
 	outline: none;
-}
-
-.frontconsole-input::-ms-clear {
-	display: none;
+	&::-ms-clear {
+		display: none;
+	}
 }
 
 .frontconsole-cmd {
@@ -48,14 +47,12 @@
 
 .frontconsole-table {
 	color: #8AE234;
-}
-
-.frontconsole-table td {
-	padding: 2px 5px;
-}
-
-.frontconsole-table td:first-child {
-	padding-left: 0;
+	td {
+		padding: 2px 5px;
+		&:first-child {
+			padding-left: 0;
+		}
+	}
 }
 
 .frontconsole-label {

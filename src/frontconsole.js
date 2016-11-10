@@ -1,4 +1,8 @@
-const FrontConsole = (userTasks, userConfig, userTranslation) => { // eslint-disable-line no-unused-vars
+// todo: uncomment this line when bundling is finished
+// import "babel-polyfill";
+
+// eslint-disable-next-line no-unused-vars
+const FrontConsole = (userTasks, userConfig, userTranslation) => {
 
 	let consoleDOM = {};
 	let consoleState = {
@@ -12,7 +16,7 @@ const FrontConsole = (userTasks, userConfig, userTranslation) => { // eslint-dis
 	}
 
 	const defaultConfig = {
-		shortcutActivator: "ctrl", //options: "ctrl", "ctrl+shift", "ctrl+alt"
+		shortcutActivator: "ctrl",
 		shortcutKeyCode: 192,
 		convertTypes: true,
 	};
@@ -220,13 +224,13 @@ const FrontConsole = (userTasks, userConfig, userTranslation) => { // eslint-dis
 			if (isFlag) {
 				argsLoaded = true;
 
-				if (param[1] === "-") { // -- flag
+				if (param[1] === "-") {
 					const flag = param.replace(/^--/, "");
 					longFlags[flag] = [];
 					lastFlag = flag;
 					lastFlagType = "long";
 					return;
-				} else { // -flag
+				} else {
 					const shortFlagsGroup = param.replace(/^-/, "").split("");
 					shortFlagsGroup.forEach((flag) => {
 						shortFlags[flag] = [];
@@ -297,7 +301,7 @@ const FrontConsole = (userTasks, userConfig, userTranslation) => { // eslint-dis
 	const printLine = (txt, type) => {
 		let line = document.createElement("pre");
 		line.className = `frontconsole-${type ? type : "default"}`;
-		(type === "cmd") ? txt = `> ${txt}` : txt; //prepend > sign when printing command
+		(type === "cmd") ? txt = `> ${txt}` : txt;
 		line.innerText = txt;
 		consoleDOM.output.appendChild(line);
 		scrollToBottom();
