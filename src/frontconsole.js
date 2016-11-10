@@ -281,7 +281,7 @@ const FrontConsole = (userTasks, userConfig, userTranslation) => { // eslint-dis
 	};
 
 	const checkType = (cmdResultType, cmdResult) => {
-		if (!cmdResultType) { //if no type is provided
+		if (!cmdResultType) {
 			if (typeof cmdResult === "string"
 				&& cmdResult[0] === "<"
 				&& cmdResult[cmdResult.length - 1] === ">") {
@@ -297,7 +297,7 @@ const FrontConsole = (userTasks, userConfig, userTranslation) => { // eslint-dis
 	const printLine = (txt, type) => {
 		let line = document.createElement("pre");
 		line.className = `frontconsole-${type ? type : "default"}`;
-		(type === "cmd") ? txt = `> ${txt}` : txt; //prepend < sign if printing command
+		(type === "cmd") ? txt = `> ${txt}` : txt; //prepend > sign when printing command
 		line.innerText = txt;
 		consoleDOM.output.appendChild(line);
 		scrollToBottom();
