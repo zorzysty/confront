@@ -85,7 +85,7 @@ const consoleDOMMethods = {
 		consoleDOM.output.appendChild(lines);
 		consoleDOMMethods.scrollToBottom();
 	},
-	finishCommand: () => {
+	autoComplete: () => {
 		const tasks = getTasksNames();
 		const matching = tasks.filter((task) => {
 			return task.startsWith(consoleDOM.input.value);

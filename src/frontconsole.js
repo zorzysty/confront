@@ -47,7 +47,7 @@ const FrontConsole = (userTasks, userConfig, userTranslation) => {
 					break;
 				case 9: //tab
 					event.preventDefault();
-					consoleDOMMethods.finishCommand();
+					consoleDOMMethods.autoComplete();
 					break;
 			}
 		}
