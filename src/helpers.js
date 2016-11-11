@@ -79,4 +79,26 @@ const extractCommandParts = (inputValue) => {
 	return commandParts.map(str => str.replace(/"/g, ""));
 };
 
-export {getArgsAndFlags, checkType, extractCommandParts};
+const isShortcutActivatorEnabled = (event, shortcutActivatorKey) => {
+	let shortcutActivatorEnabled = false;
+	switch (shortcutActivatorKey) {
+		case "ctrl":
+			if (event.ctrlKey && !event.altKey && !event.shiftKey) {
+				shortcutActivatorEnabled = true;
+			}
+			break;
+		case "ctrl+shift":
+			if (event.ctrlKey && !event.altKey && event.shiftKey) {
+				shortcutActivatorEnabled = true;
+			}
+			break;
+		case "ctrl+alt":
+			if (event.ctrlKey && event.altKey && !event.shiftKey) {
+				shortcutActivatorEnabled = true;
+			}
+			break;
+	}
+	return shortcutActivatorEnabled;
+};
+
+export {getArgsAndFlags, checkType, extractCommandParts, isShortcutActivatorEnabled};

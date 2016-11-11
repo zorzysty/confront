@@ -1,51 +1,17 @@
 // todo: uncomment this line when bundling is finished
 import "babel-polyfill";
-import defaultTranslation from "./defaultTranslation";
-import defaultConfig from "./defaultConfig";
-import {getArgsAndFlags, checkType, extractCommandParts} from "./helpers";
+import {translation, getTranslation} from "./translation";
+import {config, getConfig} from "./config";
+import {tasks, getTasks} from "./tasks";
+import {getArgsAndFlags, checkType, extractCommandParts, isShortcutActivatorEnabled} from "./helpers";
+import {consoleState, consoleStateMethods}from "./consoleState";
 
 const FrontConsole = (userTasks, userConfig, userTranslation) => {
 
 	let consoleDOM = {};
-	let consoleState = {
-		history: [],
-		rollback: 0,
-	};
-	let historyFromLocalStorage = JSON.parse(localStorage.getItem("fc-history"));
-
-	if (historyFromLocalStorage && Array.isArray(historyFromLocalStorage)) {
-		consoleState.history = historyFromLocalStorage;
-	}
-
-	const config = Object.assign(defaultConfig, userConfig);
-	const translation = Object.assign(defaultTranslation, userTranslation);
-
-	const defaultTasks = {
-		"clear": {
-			cmd: () => clearConsole(),
-			desc: translation["desc.clear"],
-		},
-		"clearhistory": {
-			cmd: () => clearHistory(),
-			desc: translation["desc.clearHistory"],
-		},
-		"help": {
-			cmd: () => displayHelp(),
-			desc: translation["desc.help"],
-			type: "html",
-		},
-	};
-
-	const tasks = Object.assign(defaultTasks, userTasks);
 
 	const clearConsole = () => {
 		consoleDOM.output.innerHTML = "";
-	};
-
-	const clearHistory = () => {
-		consoleState.history = [];
-		localStorage.setItem("fc-history", null);
-		return translation["historyCleared"];
 	};
 
 	const displayHelp = () => {
@@ -61,32 +27,9 @@ const FrontConsole = (userTasks, userConfig, userTranslation) => {
 	};
 
 	const keyDownHandler = (event) => {
-		let shortcutActivatorEnabled = false;
-		switch (config.shortcutActivator) {
-			case "ctrl":
-				if (event.ctrlKey && !event.altKey && !event.shiftKey) {
-					shortcutActivatorEnabled = true;
-				}
-				break;
-			case "ctrl+shift":
-				if (event.ctrlKey && !event.altKey && event.shiftKey) {
-					shortcutActivatorEnabled = true;
-				}
-				break;
-			case "ctrl+alt":
-				if (event.ctrlKey && event.altKey && !event.shiftKey) {
-					shortcutActivatorEnabled = true;
-				}
-				break;
-		}
-
+		const shortcutActivatorEnabled = isShortcutActivatorEnabled(event, config.shortcutActivator);
 		if (shortcutActivatorEnabled && event.keyCode === config.shortcutKeyCode) {
-			if (consoleDOM.wrapper.style.display === "none") {
-				consoleDOM.wrapper.style.display = "block";
-				setFocus();
-			} else {
-				consoleDOM.wrapper.style.display = "none";
-			}
+			toggleDisplay();
 		}
 
 		if (consoleState.busy) {
@@ -120,6 +63,15 @@ const FrontConsole = (userTasks, userConfig, userTranslation) => {
 		}
 	};
 
+	const toggleDisplay = () => {
+		if (consoleDOM.wrapper.style.display === "none") {
+			consoleDOM.wrapper.style.display = "block";
+			setFocus();
+		} else {
+			consoleDOM.wrapper.style.display = "none";
+		}
+	};
+
 	const clickHandler = () => {
 		setFocus();
 	};
@@ -130,7 +82,7 @@ const FrontConsole = (userTasks, userConfig, userTranslation) => {
 			return;
 		}
 
-		saveHistory(inputValue);
+		consoleStateMethods.saveHistory(inputValue);
 		consoleDOM.input.value = "";
 		printLine(inputValue, "cmd");
 
@@ -177,13 +129,6 @@ const FrontConsole = (userTasks, userConfig, userTranslation) => {
 				});
 		} else {
 			printResult(cmdResult, checkType(cmdResultType, cmdResult));
-		}
-	};
-
-	const saveHistory = (inputValue) => {
-		if (inputValue !== consoleState.history[consoleState.history.length - 1]) {
-			consoleState.history.push(inputValue);
-			localStorage.setItem("fc-history", JSON.stringify(consoleState.history));
 		}
 	};
 
@@ -262,6 +207,12 @@ const FrontConsole = (userTasks, userConfig, userTranslation) => {
 	};
 
 	const instantiate = () => {
+		getConfig(userConfig);
+		getTranslation(userTranslation);
+		getTasks(userTasks, translation);
+
+		consoleStateMethods.loadHistoryFromLocalStorage();
+
 		createDOMElements();
 		setBusy(false);
 		document.addEventListener("keydown", keyDownHandler);
