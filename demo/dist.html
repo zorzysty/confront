@@ -27,6 +27,8 @@
 		}
 		if (shortFlags['a'] || longFlags['all']) {
 			return args.reduce((total, number) => total + number);
+		} else if (longFlags['limit']){
+			return args.slice(0, longFlags['limit']).reduce((total, number) => total + number);
 		} else {
 			return args[0] + args[1];
 		}
