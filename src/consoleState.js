@@ -1,53 +1,59 @@
 import {translation} from "./translation";
 import {consoleDOMMethods} from "./consoleDOM";
 
-let consoleState = {
+let state = {
 	history: [],
 	rollback: 0,
 };
 
-const consoleStateMethods = {
+const consoleState = {
 	loadHistoryFromLocalStorage: () => {
 		let historyFromLocalStorage = JSON.parse(localStorage.getItem("fc-history"));
 
 		if (historyFromLocalStorage && Array.isArray(historyFromLocalStorage)) {
-			consoleState.history = historyFromLocalStorage;
+			state.history = historyFromLocalStorage;
 		}
 	},
 	clearHistory: () => {
-		consoleState.history = [];
+		state.history = [];
 		localStorage.setItem("fc-history", null);
 		return translation["historyCleared"];
 	},
 	saveHistory: (inputValue) => {
-		if (inputValue !== consoleState.history[consoleState.history.length - 1]) {
-			consoleState.history.push(inputValue);
-			localStorage.setItem("fc-history", JSON.stringify(consoleState.history));
+		if (inputValue !== state.history[state.history.length - 1]) {
+			state.history.push(inputValue);
+			localStorage.setItem("fc-history", JSON.stringify(state.history));
 		}
 	},
+	isBusy: () => {
+		return state.busy;
+	},
+	resetRollback: () => {
+		state.rollback = 0;
+	},
 	setBusy: (param) => {
-		consoleState.busy = param;
-		if (consoleState.busy) {
+		state.busy = param;
+		if (state.busy) {
 			consoleDOMMethods.showSpinner();
 		} else {
 			consoleDOMMethods.hideSpinner();
 		}
 	},
 	historyUp: () => {
-		if (consoleState.history.length - consoleState.rollback > 0) {
-			consoleState.rollback++;
-			consoleDOMMethods.setInputValue(consoleState.history[consoleState.history.length - consoleState.rollback]);
+		if (state.history.length - state.rollback > 0) {
+			state.rollback++;
+			consoleDOMMethods.setInputValue(state.history[state.history.length - state.rollback]);
 		}
 	},
 	historyDown: () => {
-		if (consoleState.rollback > 1) {
-			consoleState.rollback--;
-			consoleDOMMethods.setInputValue(consoleState.history[consoleState.history.length - consoleState.rollback]);
-		} else if (consoleState.rollback === 1) {
-			consoleState.rollback = 0;
-			consoleDOMMethods.setInputValue("");
+		if (state.rollback > 1) {
+			state.rollback--;
+			consoleDOMMethods.setInputValue(state.history[state.history.length - state.rollback]);
+		} else if (state.rollback === 1) {
+			state.rollback = 0;
+			consoleDOMMethods.clearInput();
 		}
 	}
 };
 
-export {consoleState, consoleStateMethods};
+export default consoleState;

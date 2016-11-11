@@ -1,13 +1,13 @@
+let config = {};
+
 const defaultConfig = {
 	shortcutActivator: "ctrl",
 	shortcutKeyCode: 192,
 	convertTypes: true,
 };
 
-let config = {};
-
-const getConfig = (userConfig) => {
+const initConfig = (userConfig) => {
 	config = Object.assign(defaultConfig, userConfig);
 };
 
-export {config, getConfig};
+export {config, initConfig};

@@ -1,22 +1,22 @@
 import "babel-polyfill";
 import {consoleDOM, consoleDOMMethods} from "./consoleDOM";
-import {translation, getTranslation} from "./translation";
-import {config, getConfig} from "./config";
-import {tasks, getTasks} from "./tasks";
+import {translation, initTranslation} from "./translation";
+import {config, initConfig} from "./config";
+import {tasks, initTasks} from "./tasks";
 import {getArgsAndFlags, checkType, extractCommandParts, isShortcutActivatorEnabled} from "./helpers";
-import {consoleState, consoleStateMethods}from "./consoleState";
+import consoleState from "./consoleState";
 
 const FrontConsole = (userTasks, userConfig, userTranslation) => {
 
-	const instantiate = () => {
-		getConfig(userConfig);
-		getTranslation(userTranslation);
-		getTasks(userTasks, translation);
+	const init = () => {
+		initConfig(userConfig);
+		initTranslation(userTranslation);
+		initTasks(userTasks, translation);
 
-		consoleStateMethods.loadHistoryFromLocalStorage();
+		consoleState.loadHistoryFromLocalStorage();
 
 		consoleDOMMethods.createElements();
-		consoleStateMethods.setBusy(false);
+		consoleState.setBusy(false);
 		document.addEventListener("keydown", keyDownHandler);
 		consoleDOM.wrapper.addEventListener("click", clickHandler);
 	};
@@ -27,23 +27,23 @@ const FrontConsole = (userTasks, userConfig, userTranslation) => {
 			consoleDOMMethods.toggleDisplay();
 		}
 
-		if (consoleState.busy) {
+		if (consoleState.isBusy()) {
 			return;
 		}
 
 		if (consoleDOM.input === document.activeElement) {
 			switch (event.keyCode) {
 				case 13: //enter/return
-					consoleState.rollback = 0;
+					consoleState.resetRollback();
 					executeCmd();
 					break;
 				case 38: //up
 					event.preventDefault();
-					consoleStateMethods.historyUp();
+					consoleState.historyUp();
 					break;
 				case 40: //down
 					event.preventDefault();
-					consoleStateMethods.historyDown();
+					consoleState.historyDown();
 					break;
 			}
 		}
@@ -59,14 +59,14 @@ const FrontConsole = (userTasks, userConfig, userTranslation) => {
 			return;
 		}
 
-		consoleStateMethods.saveHistory(inputValue);
-		consoleDOM.input.value = "";
-		printLine(inputValue, "cmd");
+		consoleState.saveHistory(inputValue);
+		consoleDOMMethods.clearInput();
+		consoleDOMMethods.printLine(inputValue, "cmd");
 
 		const [cmd, ...params] = extractCommandParts(inputValue);
 
 		if (!tasks[cmd]) {
-			printLine(translation["err.cmdNotFound"], "error");
+			consoleDOMMethods.printLine(translation["err.cmdNotFound"], "error");
 			return;
 		}
 
@@ -74,7 +74,7 @@ const FrontConsole = (userTasks, userConfig, userTranslation) => {
 			var {args, shortFlags, longFlags} = getArgsAndFlags(params, config.convertTypes);
 		}
 		catch (err) {
-			printLine(err, "error");
+			consoleDOMMethods.printLine(err, "error");
 			return;
 		}
 
@@ -82,7 +82,7 @@ const FrontConsole = (userTasks, userConfig, userTranslation) => {
 			var cmdResult = tasks[cmd].cmd(args, shortFlags, longFlags);
 		}
 		catch (err) {
-			printLine(err, "error");
+			consoleDOMMethods.printLine(err, "error");
 			return;
 		}
 
@@ -94,55 +94,26 @@ const FrontConsole = (userTasks, userConfig, userTranslation) => {
 		let isCmdAPromise = typeof cmdResult.then === "function";
 
 		if (isCmdAPromise) {
-			consoleStateMethods.setBusy(true);
-			cmdResult
-				.then((promiseResult) => {
-					printResult(promiseResult, checkType(cmdResultType, promiseResult));
-					consoleStateMethods.setBusy(false);
-				})
-				.catch((err) => {
-					printLine(String(err), "error");
-					consoleStateMethods.setBusy(false);
-				});
+			handlePromise(cmdResult, cmdResultType);
 		} else {
-			printResult(cmdResult, checkType(cmdResultType, cmdResult));
+			consoleDOMMethods.handleResult(cmdResult, checkType(cmdResultType, cmdResult));
 		}
 	};
 
-	const printResult = (result, resultType) => {
-		switch (resultType) {
-			case "default": {
-				if (typeof result === "object") {
-					printLine(JSON.stringify(result, undefined, 2));
-				} else {
-					printLine(result);
-				}
-				break;
-			}
-			case "html": {
-				printHTML(result);
-				break;
-			}
-		}
+	const handlePromise = (cmdResult, cmdResultType) => {
+		consoleState.setBusy(true);
+		cmdResult
+			.then((promiseResult) => {
+				consoleDOMMethods.handleResult(promiseResult, checkType(cmdResultType, promiseResult));
+				consoleState.setBusy(false);
+			})
+			.catch((err) => {
+				consoleDOMMethods.printLine(String(err), "error");
+				consoleState.setBusy(false);
+			});
 	};
 
-	const printLine = (txt, type) => {
-		let line = document.createElement("pre");
-		line.className = `frontconsole-${type ? type : "default"}`;
-		(type === "cmd") ? txt = `> ${txt}` : txt;
-		line.innerText = txt;
-		consoleDOM.output.appendChild(line);
-		consoleDOMMethods.scrollToBottom();
-	};
-
-	const printHTML = (html) => {
-		let lines = document.createElement("div");
-		lines.innerHTML = html;
-		consoleDOM.output.appendChild(lines);
-		consoleDOMMethods.scrollToBottom();
-	};
-
-	instantiate();
+	init();
 
 	return {
 		config,

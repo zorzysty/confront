@@ -8,8 +8,8 @@ const defaultTranslation = {
 
 let translation = {};
 
-const getTranslation = (userTranslation) => {
+const initTranslation = (userTranslation) => {
 	translation = Object.assign(defaultTranslation, userTranslation);
 };
 
-export {translation, getTranslation};
+export {translation, initTranslation};

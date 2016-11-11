@@ -1,4 +1,4 @@
-import {consoleStateMethods} from "./consoleState";
+import consoleState from "./consoleState";
 import {consoleDOMMethods} from "./consoleDOM";
 
 let tasks = {};
@@ -22,7 +22,7 @@ const getDefaultTasks = (translation) => {
 			desc: translation["desc.clear"],
 		},
 		"clearhistory": {
-			cmd: () => consoleStateMethods.clearHistory(),
+			cmd: () => consoleState.clearHistory(),
 			desc: translation["desc.clearHistory"],
 		},
 		"help": {
@@ -33,9 +33,9 @@ const getDefaultTasks = (translation) => {
 	};
 };
 
-const getTasks = (userTasks, translation) => {
+const initTasks = (userTasks, translation) => {
 	const defaultTasks = getDefaultTasks(translation);
 	tasks = Object.assign(defaultTasks, userTasks);
 };
 
-export {tasks, getTasks};
+export {tasks, initTasks};

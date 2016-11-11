@@ -50,7 +50,40 @@ const consoleDOMMethods = {
 	},
 	setInputValue: (value) => {
 		consoleDOM.input.value = value;
-	}
+	},
+	clearInput: () => {
+		consoleDOM.input.value = "";
+	},
+	handleResult: (result, resultType) => {
+		switch (resultType) {
+			case "default": {
+				if (typeof result === "object") {
+					consoleDOMMethods.printLine(JSON.stringify(result, undefined, 2));
+				} else {
+					consoleDOMMethods.printLine(result);
+				}
+				break;
+			}
+			case "html": {
+				consoleDOMMethods.printHTML(result);
+				break;
+			}
+		}
+	},
+	printLine: (txt, type) => {
+		let line = document.createElement("pre");
+		line.className = `frontconsole-${type ? type : "default"}`;
+		(type === "cmd") ? txt = `> ${txt}` : txt;
+		line.innerText = txt;
+		consoleDOM.output.appendChild(line);
+		consoleDOMMethods.scrollToBottom();
+	},
+	printHTML: (html) => {
+		let lines = document.createElement("div");
+		lines.innerHTML = html;
+		consoleDOM.output.appendChild(lines);
+		consoleDOMMethods.scrollToBottom();
+	},
 };
 
 export {consoleDOM, consoleDOMMethods};
