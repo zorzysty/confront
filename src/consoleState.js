@@ -1,4 +1,5 @@
-import {translation} from "./translation"; //todo: change to actual translation
+import {translation} from "./translation";
+import {consoleDOMMethods} from "./consoleDOM";
 
 let consoleState = {
 	history: [],
@@ -24,24 +25,29 @@ const consoleStateMethods = {
 			localStorage.setItem("fc-history", JSON.stringify(consoleState.history));
 		}
 	},
-	// historyUp: () => {
-	// 	if (consoleState.history.length - consoleState.rollback > 0) {
-	// 		consoleState.rollback++;
-	// 		consoleDOM.input.value = consoleState.history[consoleState.history.length - consoleState.rollback];
-	// 	}
-	// }
-	// setBusy: (param) => {
-	// 	consoleState.busy = param;
-	// 	if (consoleState.busy) {
-	// 		consoleDOM.spinner.style.display = "block";
-	// 		consoleDOM.input.style.display = "none";
-	// 	} else {
-	// 		consoleDOM.spinner.style.display = "none";
-	// 		consoleDOM.input.style.display = "block";
-	// 		setFocus();
-	// 	}
-	// },
+	setBusy: (param) => {
+		consoleState.busy = param;
+		if (consoleState.busy) {
+			consoleDOMMethods.showSpinner();
+		} else {
+			consoleDOMMethods.hideSpinner();
+		}
+	},
+	historyUp: () => {
+		if (consoleState.history.length - consoleState.rollback > 0) {
+			consoleState.rollback++;
+			consoleDOMMethods.setInputValue(consoleState.history[consoleState.history.length - consoleState.rollback]);
+		}
+	},
+	historyDown: () => {
+		if (consoleState.rollback > 1) {
+			consoleState.rollback--;
+			consoleDOMMethods.setInputValue(consoleState.history[consoleState.history.length - consoleState.rollback]);
+		} else if (consoleState.rollback === 1) {
+			consoleState.rollback = 0;
+			consoleDOMMethods.setInputValue("");
+		}
+	}
 };
-
 
 export {consoleState, consoleStateMethods};

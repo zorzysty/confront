@@ -1,16 +1,24 @@
 import {consoleStateMethods} from "./consoleState";
+import {consoleDOMMethods} from "./consoleDOM";
 
-const clearConsole = () => {
-	console.log("clear console from tasks.js");
-};
+let tasks = {};
+
 const displayHelp = () => {
-	console.log("help from tasks.js");
+	const tableStart = "<table class='frontconsole-table'>";
+	const tableEnd = "</table>";
+	let rows = [];
+	Object.keys(tasks).forEach((key)=> {
+		const name = key;
+		const desc = tasks[key].desc;
+		rows.push(`<tr><td class="frontconsole-label">${name}: </td><td class="frontconsole-value">${desc ? desc : ""}</td>`);
+	});
+	return tableStart + rows.sort().join("") + tableEnd;
 };
 
 const getDefaultTasks = (translation) => {
 	return {
 		"clear": {
-			cmd: () => clearConsole(),
+			cmd: () => consoleDOMMethods.clearConsole(),
 			desc: translation["desc.clear"],
 		},
 		"clearhistory": {
@@ -24,8 +32,6 @@ const getDefaultTasks = (translation) => {
 		},
 	};
 };
-
-let tasks = {};
 
 const getTasks = (userTasks, translation) => {
 	const defaultTasks = getDefaultTasks(translation);
