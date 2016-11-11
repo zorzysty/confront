@@ -1,7 +1,9 @@
 // todo: uncomment this line when bundling is finished
-// import "babel-polyfill";
+import "babel-polyfill";
+import defaultTranslation from "./defaultTranslation";
+import defaultConfig from "./defaultConfig";
+import {getArgsAndFlags, checkType, extractCommandParts} from "./helpers";
 
-// eslint-disable-next-line no-unused-vars
 const FrontConsole = (userTasks, userConfig, userTranslation) => {
 
 	let consoleDOM = {};
@@ -15,22 +17,7 @@ const FrontConsole = (userTasks, userConfig, userTranslation) => {
 		consoleState.history = historyFromLocalStorage;
 	}
 
-	const defaultConfig = {
-		shortcutActivator: "ctrl",
-		shortcutKeyCode: 192,
-		convertTypes: true,
-	};
-
 	const config = Object.assign(defaultConfig, userConfig);
-
-	const defaultTranslation = {
-		"desc.clear": "Clears console",
-		"desc.clearHistory": "Clears history",
-		"desc.help": "This help",
-		"err.cmdNotFound": "Command not found",
-		"historyCleared": "History cleared",
-	};
-
 	const translation = Object.assign(defaultTranslation, userTranslation);
 
 	const defaultTasks = {
@@ -155,7 +142,7 @@ const FrontConsole = (userTasks, userConfig, userTranslation) => {
 		}
 
 		try {
-			var {args, shortFlags, longFlags} = getArgsAndFlags(params);
+			var {args, shortFlags, longFlags} = getArgsAndFlags(params, config.convertTypes);
 		}
 		catch (err) {
 			printLine(err, "error");
@@ -200,73 +187,6 @@ const FrontConsole = (userTasks, userConfig, userTranslation) => {
 		}
 	};
 
-	const extractCommandParts = (inputValue) => {
-		const commandParts = inputValue.match(/[^\s"]+|"[^"]*"/g);
-		return commandParts.map(str => str.replace(/"/g, ""));
-	};
-
-	const getArgsAndFlags = (params) => {
-		let args = [];
-		let shortFlags = {};
-		let longFlags = {};
-		let argsLoaded = false;
-		let lastFlag = "";
-		let lastFlagType = "";
-
-		params.forEach(param => {
-			const isFlag = param[0] === "-";
-
-			if (!argsLoaded && !isFlag) {
-				args.push(guessType(param));
-				return;
-			}
-
-			if (isFlag) {
-				argsLoaded = true;
-
-				if (param[1] === "-") {
-					const flag = param.replace(/^--/, "");
-					longFlags[flag] = [];
-					lastFlag = flag;
-					lastFlagType = "long";
-					return;
-				} else {
-					const shortFlagsGroup = param.replace(/^-/, "").split("");
-					shortFlagsGroup.forEach((flag) => {
-						shortFlags[flag] = [];
-					});
-					lastFlag = shortFlagsGroup[shortFlagsGroup.length - 1];
-					lastFlagType = "short";
-				}
-
-			}
-
-			if (argsLoaded && !isFlag) {
-				if (lastFlagType === "short") {
-					shortFlags[lastFlag].push(guessType(param));
-				} else {
-					longFlags[lastFlag].push(guessType(param));
-				}
-			}
-
-		});
-
-		return {args, shortFlags, longFlags};
-	};
-
-	const guessType = (str) => {
-		if (!config.convertTypes) {
-			return str;
-		}
-		if (str.match(/^[+-]?([0-9]*[.])?[0-9]+$/)) {
-			return parseFloat(str);
-		}
-		if (str.toLowerCase() === "false" || str.toLowerCase() === "true") {
-			return str === "true";
-		}
-		return str;
-	};
-
 	const printResult = (result, resultType) => {
 		switch (resultType) {
 			case "default": {
@@ -281,20 +201,6 @@ const FrontConsole = (userTasks, userConfig, userTranslation) => {
 				printHTML(result);
 				break;
 			}
-		}
-	};
-
-	const checkType = (cmdResultType, cmdResult) => {
-		if (!cmdResultType) {
-			if (typeof cmdResult === "string"
-				&& cmdResult[0] === "<"
-				&& cmdResult[cmdResult.length - 1] === ">") {
-				return "html";
-			} else {
-				return "default";
-			}
-		} else {
-			return cmdResultType;
 		}
 	};
 
@@ -319,7 +225,6 @@ const FrontConsole = (userTasks, userConfig, userTranslation) => {
 	};
 
 	const createDOMElements = () => {
-
 		consoleDOM.wrapper = document.createElement("div");
 		consoleDOM.output = document.createElement("div");
 		consoleDOM.input = document.createElement("input");
@@ -371,3 +276,5 @@ const FrontConsole = (userTasks, userConfig, userTranslation) => {
 		consoleDOM
 	};
 };
+
+window.FrontConsole = FrontConsole;
