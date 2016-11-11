@@ -45,6 +45,10 @@ const FrontConsole = (userTasks, userConfig, userTranslation) => {
 					event.preventDefault();
 					consoleState.historyDown();
 					break;
+				case 9: //tab
+					event.preventDefault();
+					consoleDOMMethods.finishCommand();
+					break;
 			}
 		}
 	};

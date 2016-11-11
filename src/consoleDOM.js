@@ -1,3 +1,4 @@
+import {getTasksNames} from "./tasks"
 let consoleDOM = {};
 
 const consoleDOMMethods = {
@@ -84,6 +85,24 @@ const consoleDOMMethods = {
 		consoleDOM.output.appendChild(lines);
 		consoleDOMMethods.scrollToBottom();
 	},
+	finishCommand: () => {
+		const tasks = getTasksNames();
+		const matching = tasks.filter((task) => {
+			return task.startsWith(consoleDOM.input.value);
+		});
+		if (matching.length === 1) {
+			consoleDOMMethods.setInputValue(matching[0]);
+		} else if (matching.length > 1) {
+			consoleDOMMethods.setInputValue(sharedStart(matching));
+		}
+	}
 };
+
+function sharedStart(array) {
+	var A = array.concat().sort(),
+		a1 = A[0], a2 = A[A.length - 1], L = a1.length, i = 0;
+	while (i < L && a1.charAt(i) === a2.charAt(i)) i++;
+	return a1.substring(0, i);
+}
 
 export {consoleDOM, consoleDOMMethods};

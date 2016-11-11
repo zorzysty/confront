@@ -7,7 +7,7 @@ const displayHelp = () => {
 	const tableStart = "<table class='frontconsole-table'>";
 	const tableEnd = "</table>";
 	let rows = [];
-	Object.keys(tasks).forEach((key)=> {
+	Object.keys(tasks).forEach((key) => {
 		const name = key;
 		const desc = tasks[key].desc;
 		rows.push(`<tr><td class="frontconsole-label">${name}: </td><td class="frontconsole-value">${desc ? desc : ""}</td>`);
@@ -33,9 +33,13 @@ const getDefaultTasks = (translation) => {
 	};
 };
 
+const getTasksNames = () => {
+	return Object.keys(tasks).map((key) => key);
+};
+
 const initTasks = (userTasks, translation) => {
 	const defaultTasks = getDefaultTasks(translation);
 	tasks = Object.assign(defaultTasks, userTasks);
 };
 
-export {tasks, initTasks};
+export {tasks, initTasks, getTasksNames};
