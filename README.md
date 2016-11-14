@@ -1,6 +1,14 @@
 # FrontConsole
 Super handy console-like CLI for any kind of web app. No external dependencies.
 
+## Features
+* Custom commands
+* Supports promises, multiple arguments and flags 
+* Sync and async error handling
+* Tab auto-completion
+* Command history with up and down arrows
+* Type recognition
+
 ## Installing
 ```
 npm install frontconsole --save
@@ -28,15 +36,9 @@ For console to work properly you need to style it with CSS. You can use default 
 <link rel="stylesheet" href="./node_modules/frontconsole/dist/frontconsole.css">
 ```
 
-## Features
-* Custom commands
-* Supports promises, multiple arguments and flags 
-* Sync and async error handling
-* Tab auto-completion
-* Command history with up and down arrows
-* Type recognition
-
 ## Getting started
+After you have FrontConsole running, open your app and simply click `` CTRL+` `` (Windows/Linux) or `` Control+` `` (macOS). This shortcut can be [configured](#Configuration). 
+Type in `help` and press Enter/Return to see all the currently available commands. 
 
 ### Custom commands 
 FrontConsole is pretty much useless until you power it up with your custom commands. You can pass them as the first argument when calling FrontConsole().
@@ -54,12 +56,12 @@ Now when you open up FrontConsole in your app and type in
 3
 ```
 Adding a custom command makes it visible in **help** - a build in command that lists all the available commands.
-Specifying additional "help" key in "add" object will make it display in help:
+Specifying additional "desc" key in "add" object will make it display in help:
 ```javascript
 FrontConsole({
     "add": {
         cmd: (args) => args[0] + args[1],
-        help: "Adds together two numbers"
+        desc: "Adds together two numbers"
     }
 });
 ```
@@ -84,7 +86,7 @@ function add(args, flags) {
 const commands: {
     "add": {
         cmd: (args, flags) => add(args, flags),
-        help: "Adds together two numbers"
+        desc: "Adds together two numbers"
     }
 }
 FrontConsole(commands);
@@ -107,7 +109,7 @@ function add(args, shortFlags, longFlags) {
 const commands: {
     "add": {
         cmd: (args, flags) => add(args, flags),
-        help: "Adds together two numbers"
+        desc: "Adds together two numbers"
     }
 }
 FrontConsole(commands);
@@ -170,6 +172,65 @@ FrontConsole(commands);
 (spinner for two seconds)
 (Error: ) Promise rejected
 ```
+### HTML
+Your command can also return HTML which will be displayed inside FrontConsole. FrontConsole will try to guess if the returned valuse is HTML, but you can spare it the work by setting type to "html". It's useful especially when we need to format result, for example using table:
+```
+const displayHelp = () => {
+	const tableStart = "<table class='frontconsole-table'>";
+	const tableEnd = "</table>";
+	let rows = [];
+	Object.keys(tasks).forEach((key) => {
+		const name = key;
+		const desc = tasks[key].desc;
+		rows.push(`<tr><td class="frontconsole-label">${name}: </td><td class="frontconsole-value">${desc ? desc : ""}</td>`);
+	});
+	return tableStart + rows.sort().join("") + tableEnd;
+};
+const commands = {
+    "help": {
+        cmd: () => displayHelp(),
+        desc: translation["desc.help"],
+        type: "html",
+    },
+}
+FrontConsole(commands);
+```
+
+## Configuration
+Custom configuration can be passed as a second argument to FrontConsole. Right now it allows to change three basic values. Here's the example:
+```javascript
+const config = {
+    shortcutActivator: "ctrl",
+    shortcutKeyCode: 220,
+    convertTypes: false,
+};
+FrontConsole(commands, config);
+```
+| Parameter     | Description   | Possible options | Default |
+| ------------ | ------------- | --------------- | ------- |
+| shortcutActivator      | Key to be pressed to activate shortcut| "ctrl", "ctrl+shift", "ctrl+alt" | "ctrl" |
+| shortcutKeyCode      | Code of the key to be pressed when activator enabled      | See [keycode.info](http://keycode.info) | 220 |
+| convertTypes | Automatically convert types from string   | true, false | true |
+
+## Translation
+There are some build in strings that can be translated. Custom translation can be passed as a third argument to FrontConsole:
+```javascript
+const translation = {
+    "err.cmdNotFound": "Custom command not found translation"
+};
+FrontConsole(commands, config, translation);
+```
+Here are all the default values:
+```javascript
+{
+	"desc.clear": "Clears console",
+	"desc.clearHistory": "Clears history",
+	"desc.help": "This help",
+	"err.cmdNotFound": "Command not found",
+	"historyCleared": "History cleared",
+}
+```
+
 ## Versioning
 FrontConsole uses [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/zorzysty/FrontConsole/tags).
 
