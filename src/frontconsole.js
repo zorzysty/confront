@@ -126,4 +126,4 @@ const FrontConsole = (userTasks, userConfig, userTranslation) => {
 	};
 };
 
-window.FrontConsole = FrontConsole;
+export default FrontConsole;

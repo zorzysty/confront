@@ -3,6 +3,9 @@ module.exports = {
 	output: {
 		path: "./dist",
 		filename: "frontconsole.js",
+		library: "FrontConsole",
+		libraryTarget: "umd",
+		umdNamedDefine: true
 	},
 	devtool: "source-map",
 	module: {

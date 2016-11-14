@@ -65,7 +65,7 @@
 	};
 
 	const translation = {
-		"err.cmdNotFound": "Command was not found (userSetting)"
+		"err.cmdNotFound": "Command was not found (demo Setting)"
 	};
 
 	const tasks = {
@@ -90,8 +90,7 @@
 			desc: "returns promise (rejected)"
 		},
 	};
-
-	var fc = FrontConsole(tasks, config, translation);
+	var fc = FrontConsole.default(tasks, config, translation);
 	console.log(fc);
 </script>
 
