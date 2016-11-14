@@ -1,10 +1,10 @@
 @import "variables.less";
 
-.frontconsole, .frontconsole-input {
+.confront, .confront-input {
 	font: 13px/13px 'Inconsolata-g for Powerline', Inconsolata, 'Consolas', 'Courier New', Courier, 'Lucida Console', Monaco, monospace !important;
 }
 
-.frontconsole {
+.confront {
 	background: @background;
 	height: 230px;
 	position: fixed;
@@ -16,7 +16,7 @@
 	overflow: auto;
 }
 
-.frontconsole-input {
+.confront-input {
 	height: 20px;
 	width: 100%;
 	display: block;
@@ -31,19 +31,19 @@
 	}
 }
 
-.frontconsole-cmd {
+.confront-cmd {
 	color: @greyLight;
 }
 
-.frontconsole-error {
+.confront-error {
 	color: @outputError;
 }
 
-.frontconsole-default {
+.confront-default {
 	color: @outputDefault;
 }
 
-.frontconsole-table {
+.confront-table {
 	color: @highlight;
 	td {
 		padding: 2px 5px;
@@ -53,15 +53,15 @@
 	}
 }
 
-.frontconsole-label {
+.confront-label {
 	color: @greyLight;
 }
 
-.frontconsole-value {
+.confront-value {
 	color: @greyDark;
 }
 
-.frontconsole-spinner {
+.confront-spinner {
 	width: 18px;
 	height: 18px;
 	border: 2px solid @spinnerBackground;
@@ -70,7 +70,7 @@
 	animation: spin 1s linear infinite;
 }
 
-.frontconsole-output > pre {
+.confront-output > pre {
 	margin-top: 3px;
 	margin-bottom: 3px;
 }

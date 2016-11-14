@@ -8,10 +8,10 @@ const consoleDOMMethods = {
 		consoleDOM.input = document.createElement("input");
 		consoleDOM.spinner = document.createElement("div");
 
-		consoleDOM.wrapper.className = "frontconsole";
-		consoleDOM.output.className = "frontconsole-output";
-		consoleDOM.input.className = "frontconsole-input";
-		consoleDOM.spinner.className = "frontconsole-spinner";
+		consoleDOM.wrapper.className = "confront";
+		consoleDOM.output.className = "confront-output";
+		consoleDOM.input.className = "confront-input";
+		consoleDOM.spinner.className = "confront-spinner";
 
 		consoleDOM.wrapper.appendChild(consoleDOM.output);
 		consoleDOM.wrapper.appendChild(consoleDOM.input);
@@ -73,7 +73,7 @@ const consoleDOMMethods = {
 	},
 	printLine: (txt, type) => {
 		let line = document.createElement("pre");
-		line.className = `frontconsole-${type ? type : "default"}`;
+		line.className = `confront-${type ? type : "default"}`;
 		(type === "cmd") ? txt = `> ${txt}` : txt;
 		line.innerText = txt;
 		consoleDOM.output.appendChild(line);

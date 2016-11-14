@@ -6,7 +6,7 @@ import {tasks, initTasks} from "./tasks";
 import {getArgsAndFlags, checkType, extractCommandParts, isShortcutActivatorEnabled} from "./helpers";
 import consoleState from "./consoleState";
 
-const FrontConsole = (userTasks, userConfig, userTranslation) => {
+const ConFront = (userTasks, userConfig, userTranslation) => {
 
 	const init = () => {
 		initConfig(userConfig);
@@ -126,4 +126,4 @@ const FrontConsole = (userTasks, userConfig, userTranslation) => {
 	};
 };
 
-export default FrontConsole;
+export default ConFront;

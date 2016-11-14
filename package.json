@@ -1,10 +1,10 @@
 {
-  "name": "frontconsole",
-  "version": "0.0.1",
-  "description": "Super handy console tool for your web app. No external dependencies.",
-  "main": "src/frontconsole.js",
+  "name": "confront",
+  "version": "0.8.0",
+  "description": "Fully customizable CLI for the web apps",
+  "main": "src/confront.js",
   "scripts": {
-    "css": "./node_modules/.bin/lessc --clean-css ./src/frontconsole.less ./dist/frontconsole.css",
+    "css": "./node_modules/.bin/lessc --clean-css ./src/confront.less ./dist/confront.css",
     "build": "./node_modules/.bin/rimraf dist && npm run css && ./node_modules/.bin/webpack",
     "watch": "watch 'npm run build && npm run start' ./src ./demo",
     "start": "./node_modules/.bin/http-server"

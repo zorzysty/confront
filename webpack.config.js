@@ -1,9 +1,9 @@
 module.exports = {
-	entry: "./src/frontconsole.js",
+	entry: "./src/confront.js",
 	output: {
 		path: "./dist",
-		filename: "frontconsole.js",
-		library: "FrontConsole",
+		filename: "confront.js",
+		library: "ConFront",
 		libraryTarget: "umd",
 		umdNamedDefine: true
 	},

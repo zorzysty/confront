@@ -4,14 +4,14 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
-	<title>FrontConsole Demo</title>
+	<title>ConFront Demo</title>
 	<link rel="stylesheet" href="demo.css">
-	<link rel="stylesheet" href="../dist/frontconsole.css">
+	<link rel="stylesheet" href="../dist/confront.css">
 </head>
 <body>
 <img src="background.png" alt="">
 
-<script src="../dist/frontconsole.js"></script>
+<script src="../dist/confront.js"></script>
 <script>
 	function process() {
 		return {
@@ -83,15 +83,15 @@
 		},
 		"promiseme": {
 			cmd: () => promiseme(),
-			desc: "returns promise (fullfilled)"
+			desc: "returns promise (fulfilled)"
 		},
 		"rejectme": {
 			cmd: () => rejectme(),
 			desc: "returns promise (rejected)"
 		},
 	};
-	var fc = FrontConsole.default(tasks, config, translation);
-	console.log(fc);
+	var cf = ConFront.default(tasks, config, translation);
+	console.log(cf);
 </script>
 
 </body>
