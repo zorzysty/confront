@@ -6,13 +6,12 @@
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
 	<title>FrontConsole Demo</title>
 	<link rel="stylesheet" href="demo.css">
-	<link rel="stylesheet" href="../build/frontconsole.css">
+	<link rel="stylesheet" href="../dist/frontconsole.css">
 </head>
 <body>
 <img src="background.png" alt="">
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.2/require.min.js"></script>
-<script src="../build/frontconsole.js"></script>
+<script src="../dist/frontconsole.js"></script>
 <script>
 	function process() {
 		return {
@@ -28,6 +27,8 @@
 		}
 		if (shortFlags['a'] || longFlags['all']) {
 			return args.reduce((total, number) => total + number);
+		} else if (longFlags['limit']){
+			return args.slice(0, longFlags['limit']).reduce((total, number) => total + number);
 		} else {
 			return args[0] + args[1];
 		}
@@ -36,7 +37,7 @@
 	function promiseme() {
 		return new Promise((resolve) => {
 			setTimeout(function () {
-				resolve(['from resolved promise', "dsadsada", '222', {"aaa": 22, "ss": 4}]);
+				resolve(['from resolved promise', "list item", '222', {"aaa": 22, "ss": 4}]);
 			}, 2000)
 		})
 	}
@@ -64,7 +65,7 @@
 	};
 
 	const translation = {
-		"err.cmdNotFound": "Command was not found (userSetting)"
+		"err.cmdNotFound": "Command was not found (demo translation)"
 	};
 
 	const tasks = {
@@ -89,9 +90,7 @@
 			desc: "returns promise (rejected)"
 		},
 	};
-
-	var fc = FrontConsole(tasks, config, translation);
-	window.fc = fc;
+	var fc = FrontConsole.default(tasks, config, translation);
 	console.log(fc);
 </script>
 
