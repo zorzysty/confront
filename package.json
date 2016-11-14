@@ -6,8 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "css": "./node_modules/.bin/lessc --clean-css ./src/frontconsole.less ./dist/frontconsole.css",
-    "watch": "watch 'npm run dist && npm run start' ./src ./demo",
-    "dist": "npm run css && ./node_modules/.bin/webpack",
+    "build": "npm run css && ./node_modules/.bin/webpack",
+    "watch": "watch 'npm run build && npm run start' ./src ./demo",
     "start": "./node_modules/.bin/http-server"
   },
   "author": "zorzysty",
