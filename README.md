@@ -32,7 +32,7 @@ For console to work properly you need to style it with CSS. You can use default 
 * Custom commands
 * Supports promises, multiple arguments and flags 
 * Sync and async error handling
-* Autocomplete
+* Tab auto-completion
 * Command history with up and down arrows
 * Type recognition
 
