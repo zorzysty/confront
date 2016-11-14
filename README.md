@@ -1,5 +1,25 @@
-# FrontConsole
-Super handy console-like CLI for any kind of web app. No external dependencies.
+# ConFront
+Super handy, fully customizable CLI for the web. Think of it as a command line of your operating system that you know and love, but inside your web app.
+
+## Description
+ConFront is designed for (but not limited to) web app admins to help them save time by converting their everyday tasks into simple, easy to remember, customizable commands.
+These commands can utilize REST API functions that are already in your app.
+
+Let's say your web app has an administration page where admin can log in and perform some repeatable tasks. This page contains:
+* Clear cache button
+* Add user form
+* Edit user form
+* Backup database form with some checkboxes for additional options
+All of these send REST requests to the backend using promises. After promise is resolved/rejected proper notification is displayed containing server response.
+
+This is where ConFront comes in. You can perform the same tasks but much quicker and simpler. Just like using command line in your operating system. Just open ConFront (`` CTRL+` `` on Win/Linux or `` Control+` `` on mac) and enter your command. For example: 
+| Task | Example command |
+| ---- | -------------------------- |
+| Clear cache | `clearcache` |
+| Add user | `adduser "John Smith" --group Users` |
+| Change user permissions and email | `changeuser 123456 --group Admins --email newemail@example.com` |
+| Backup database | `db backup` |
+| Backup database (with additional flags) | `db backup -anq` | 
 
 ## Features
 * Custom commands
@@ -7,50 +27,52 @@ Super handy console-like CLI for any kind of web app. No external dependencies.
 * Sync and async error handling
 * Tab auto-completion
 * Command history with up and down arrows
+* Works with every framework
 * Type recognition
+* No external dependencies
 
 ## Installing
 ```
-npm install frontconsole --save
+npm install confront --save
 ```
 
 ### ES6 Import
 ```
-import FrontConsole from "frontconsole";
-FrontConsole();
+import ConFront from "confront";
+ConFront();
 ```
 
 ### Script src
 **It's strongly recommended to use ES6 Import instead of this**
-You can use FrontConsole by simply adding script tag to your HTML:
+You can use ConFront by simply adding script tag to your HTML:
 ```html
-<script src="./node_modules/frontconsole/dist/frontconsole.js"></script>
+<script src="./node_modules/confront/dist/confront.js"></script>
 ```
-It exposes window.FrontConsole and you can use it like this:
+It exposes window.ConFront and you can use it like this:
 ```javascript
-FrontConsole.default();
+ConFront.default();
 ```
 ### CSS
-For console to work properly you need to style it with CSS. You can use default styles:
+For ConFront to work properly you need to style it with CSS. You can use default styles:
 ```html
-<link rel="stylesheet" href="./node_modules/frontconsole/dist/frontconsole.css">
+<link rel="stylesheet" href="./node_modules/confront/dist/confront.css">
 ```
 
 ## Getting started
-After you have FrontConsole running, open your app and simply click `` CTRL+` `` (Windows/Linux) or `` Control+` `` (macOS). This shortcut can be [configured](#Configuration). 
+After you have ConFront running, open your app and simply press `` CTRL+` `` (Windows/Linux) or `` Control+` `` (macOS). This shortcut can be [configured](#Configuration). 
 Type in `help` and press Enter/Return to see all the currently available commands. 
 
 ### Custom commands 
-FrontConsole is pretty much useless until you power it up with your custom commands. You can pass them as the first argument when calling FrontConsole().
+ConFront is pretty much useless until you power it up with your custom commands. You can pass them as the first argument when calling ConFront().
 Let's create a simple command that adds together two numbers:
 ```javascript
-FrontConsole({
+ConFront({
     "add": {
         cmd: (args) => args[0] + args[1]
     }
 });
 ```
-Now when you open up FrontConsole in your app and type in
+Now when you open up ConFront in your app and type in
 ```
 > add 1 2
 3
@@ -58,7 +80,7 @@ Now when you open up FrontConsole in your app and type in
 Adding a custom command makes it visible in **help** - a build in command that lists all the available commands.
 Specifying additional "desc" key in "add" object will make it display in help:
 ```javascript
-FrontConsole({
+ConFront({
     "add": {
         cmd: (args) => args[0] + args[1],
         desc: "Adds together two numbers"
@@ -89,7 +111,7 @@ const commands: {
         desc: "Adds together two numbers"
     }
 }
-FrontConsole(commands);
+ConFront(commands);
 ```
 ```
 > add 1 2 3 4 5 -a
@@ -112,7 +134,7 @@ const commands: {
         desc: "Adds together two numbers"
     }
 }
-FrontConsole(commands);
+ConFront(commands);
 ```
 ```
 > add 1 2 3 4 5 --limit 3
@@ -123,7 +145,7 @@ FrontConsole(commands);
 10
 ```
 ### Promises
-FrontConsole was designed with promises in mind, so you don't have to worry about it. Console waits for promise to be resolved or rejected and in the meantime displays spinner animation. When the promise is fulfilled, it displays the result (if resolved) or error (if rejected).
+ConFront was designed with promises in mind, so you don't have to worry about it. ConFront waits for promise to be resolved or rejected and in the meantime displays spinner animation. When the promise is fulfilled, it displays the result (if resolved) or error (if rejected).
 Example:
 ```javascript
 function promiseme() {
@@ -152,7 +174,7 @@ const commands: {
         desc: "returns promise (rejected)"
     },
 }
-FrontConsole(commands);
+ConFront(commands);
 ```
 ```
 > promiseme
@@ -173,16 +195,16 @@ FrontConsole(commands);
 (Error: ) Promise rejected
 ```
 ### HTML
-Your command can also return HTML which will be displayed inside FrontConsole. FrontConsole will try to guess if the returned valuse is HTML, but you can spare it the work by setting type to "html". It's useful especially when we need to format result, for example using table:
+Your command can also return HTML which will be displayed inside ConFront. ConFront will try to guess if the returned valuse is HTML, but you can spare it the work by setting type to "html". It's useful especially when we need to format result, for example using table:
 ```
 const displayHelp = () => {
-	const tableStart = "<table class='frontconsole-table'>";
+	const tableStart = "<table class='confront-table'>";
 	const tableEnd = "</table>";
 	let rows = [];
 	Object.keys(tasks).forEach((key) => {
 		const name = key;
 		const desc = tasks[key].desc;
-		rows.push(`<tr><td class="frontconsole-label">${name}: </td><td class="frontconsole-value">${desc ? desc : ""}</td>`);
+		rows.push(`<tr><td class="confront-label">${name}: </td><td class="confront-value">${desc ? desc : ""}</td>`);
 	});
 	return tableStart + rows.sort().join("") + tableEnd;
 };
@@ -193,18 +215,18 @@ const commands = {
         type: "html",
     },
 }
-FrontConsole(commands);
+ConFront(commands);
 ```
 
 ## Configuration
-Custom configuration can be passed as a second argument to FrontConsole. Right now it allows to change three basic values. Here's the example:
+Custom configuration can be passed as a second argument to ConFront. Right now it allows to change three basic values. Here's the example:
 ```javascript
 const config = {
     shortcutActivator: "ctrl",
     shortcutKeyCode: 220,
     convertTypes: false,
 };
-FrontConsole(commands, config);
+ConFront(commands, config);
 ```
 | Parameter     | Description   | Possible options | Default |
 | ------------ | ------------- | --------------- | ------- |
@@ -213,12 +235,12 @@ FrontConsole(commands, config);
 | convertTypes | Automatically convert types from string   | true, false | true |
 
 ## Translation
-There are some build in strings that can be translated. Custom translation can be passed as a third argument to FrontConsole:
+There are some build in strings that can be translated. Custom translation can be passed as a third argument to ConFront:
 ```javascript
 const translation = {
     "err.cmdNotFound": "Custom command not found translation"
 };
-FrontConsole(commands, config, translation);
+ConFront(commands, config, translation);
 ```
 Here are all the default values:
 ```javascript
@@ -231,8 +253,16 @@ Here are all the default values:
 }
 ```
 
-## Versioning
-FrontConsole uses [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/zorzysty/FrontConsole/tags).
+## Use cases
+ConFront is designed to help web app admins save time by simplifying their everyday tasks into easy to remember, customizable commands.
+These command can utilize REST API functions that are already in your app.
+| Task | Example command |
+| ---- | -------------------------- |
+| Clear cache | `clearcache` | 
+| Add user | `adduser "John Smith" --group Users` | 
+| Change user permissions and email | `changeuser 123456 --group Admins --email newemail@example.com` | 
+| Backup database | `db backup` | 
+| Backup database (with additional flags) | `db backup -anq` | 
 
 ## License
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
