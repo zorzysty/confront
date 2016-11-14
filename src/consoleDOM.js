@@ -1,4 +1,4 @@
-import {getTasksNames} from "./tasks"
+import {getTasksNames} from "./tasks";
 let consoleDOM = {};
 
 const consoleDOMMethods = {
