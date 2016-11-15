@@ -5,21 +5,22 @@ Super handy, fully customizable CLI for the web. Think of it as a command line o
 ConFront is designed for (but not limited to) web app admins to help them save time by converting their everyday tasks into simple, easy to remember, customizable commands.
 These commands can utilize REST API functions that are already in your app.
 
+### Example use case
 Let's say your web app has an administration page where admin can log in and perform some repeatable tasks. This page contains:
 * Clear cache button
 * Add user form
 * Edit user form
-* Backup database form with some checkboxes for additional options
-All of these send REST requests to the backend using promises. After promise is resolved/rejected proper notification is displayed containing server response.
+* Backup database form with some checkboxes and datepicker for additional options
+All of these call specific functions that send REST requests to the backend using promises. After promise is resolved/rejected proper notification is displayed containing server response.
 
-This is where ConFront comes in. You can perform the same tasks but much quicker and simpler. Just like using command line in your operating system. Just open ConFront (`` CTRL+` `` on Win/Linux or `` Control+` `` on mac) and enter your command. For example: 
-| Task | Example command |
-| ---- | -------------------------- |
-| Clear cache | `clearcache` |
-| Add user | `adduser "John Smith" --group Users` |
-| Change user permissions and email | `changeuser 123456 --group Admins --email newemail@example.com` |
-| Backup database | `db backup` |
-| Backup database (with additional flags) | `db backup -anq` | 
+This is where ConFront comes in. You can perform the same tasks but much quicker and simpler. Just like using command line in your operating system. Simply open ConFront (`` CTRL+` `` on Win/Linux or `` Control+` `` on mac) and enter your command. For example: 
+| Task                                    | Example command                                                 |
+| --------------------------------------- | --------------------------------------------------------------- |
+| Clear cache                             | `clearcache`                                                    |
+| Add user                                | `adduser "John Smith" --group Users`                            |
+| Change user permissions and email       | `changeuser 123456 --group Admins --email newemail@example.com` |
+| Backup database                         | `db backup`                                                     |
+| Backup database (with additional flags) | `db backup -aq --date 2016.11.11`                               | 
 
 ## Features
 * Custom commands
@@ -28,8 +29,8 @@ This is where ConFront comes in. You can perform the same tasks but much quicker
 * Tab auto-completion
 * Command history with up and down arrows
 * Works with every framework
-* Type recognition
 * No external dependencies
+* Custom css templates
 
 ## Installing
 ```
@@ -43,8 +44,8 @@ ConFront();
 ```
 
 ### Script src
-**It's strongly recommended to use ES6 Import instead of this**
-You can use ConFront by simply adding script tag to your HTML:
+**It's strongly recommended to use ES6 Import as shown above instead of this**
+You can use ConFront by adding script tag to your HTML:
 ```html
 <script src="./node_modules/confront/dist/confront.js"></script>
 ```
@@ -52,6 +53,7 @@ It exposes window.ConFront and you can use it like this:
 ```javascript
 ConFront.default();
 ```
+
 ### CSS
 For ConFront to work properly you need to style it with CSS. You can use default styles:
 ```html
@@ -63,8 +65,8 @@ After you have ConFront running, open your app and simply press `` CTRL+` `` (Wi
 Type in `help` and press Enter/Return to see all the currently available commands. 
 
 ### Custom commands 
-ConFront is pretty much useless until you power it up with your custom commands. You can pass them as the first argument when calling ConFront().
-Let's create a simple command that adds together two numbers:
+ConFront is pretty much useless until you power it up with your custom commands. You can pass them as the object in the first argument when calling ConFront().
+Let's create a simple command that adds together two given numbers:
 ```javascript
 ConFront({
     "add": {
@@ -72,13 +74,13 @@ ConFront({
     }
 });
 ```
-Now when you open up ConFront in your app and type in
+Now when you open up ConFront in your app and type in `add 1 2`, you'll get the result displayed as expected.
 ```
 > add 1 2
 3
 ```
-Adding a custom command makes it visible in **help** - a build in command that lists all the available commands.
-Specifying additional "desc" key in "add" object will make it display in help:
+Adding a custom command makes it visible in **help** - a built-in command that lists all the available commands.
+Specifying additional `"desc"` key in `"add"` object will make it display in help:
 ```javascript
 ConFront({
     "add": {
@@ -95,7 +97,7 @@ clearhistory:   Clears history
 help:           This help
 ```
 ### Flags
-Let's enhance "add" command a little by adding support for `-a` flag.
+Let's enhance "add" command a little by adding support for `-a` flag that changes command behaviour so that it sums all the given numbers instead of the first two.
 And while we're at it, let's do some code separation for better readability.
 ```javascript
 function add(args, flags) {
@@ -117,6 +119,7 @@ ConFront(commands);
 > add 1 2 3 4 5 -a
 15
 ```
+
 It also supports long flags, like `--limit`. Also all flags can have their own arguments. Here's the example:
 ```javascript
 function add(args, shortFlags, longFlags) {
@@ -130,7 +133,7 @@ function add(args, shortFlags, longFlags) {
 }
 const commands: {
     "add": {
-        cmd: (args, flags) => add(args, flags),
+        cmd: (args, shortFlags, longFlags) => add(args, shortFlags, longFlags),
         desc: "Adds together two numbers"
     }
 }
@@ -144,8 +147,29 @@ ConFront(commands);
 > add 1 2 3 4 5 --limit 4
 10
 ```
+
+Short flags can be grouped. For example command:
+```
+backupdb -azm "My backup" --date 2016.11.11 --log info email 7
+```
+Will give you this short flags object:
+```javascript
+{
+    a: [],
+    z: [],
+    m: ["My backup"]
+}
+```
+And long flags:
+```javascript
+{
+    "date": ["2016.11.11"],
+    "log":  ["info", "email", 7]
+}
+```
+
 ### Promises
-ConFront was designed with promises in mind, so you don't have to worry about it. ConFront waits for promise to be resolved or rejected and in the meantime displays spinner animation. When the promise is fulfilled, it displays the result (if resolved) or error (if rejected).
+ConFront was designed with promises in mind, so you don't have to worry about it. ConFront waits for promise to be resolved or rejected and in the meantime shows a spinner animation. When the promise is fulfilled, it displays the result (if resolved) or error (if rejected).
 Example:
 ```javascript
 function promiseme() {
@@ -194,8 +218,10 @@ ConFront(commands);
 (spinner for two seconds)
 (Error: ) Promise rejected
 ```
+
 ### HTML
-Your command can also return HTML which will be displayed inside ConFront. ConFront will try to guess if the returned valuse is HTML, but you can spare it the work by setting type to "html". It's useful especially when we need to format result, for example using table:
+Your command can also return HTML which will be displayed inside ConFront. ConFront will try to guess if the returned value is HTML, but you can spare it the work by explicitly setting type to "html". 
+It's useful especially when we need to format the outcome, for example built-in `help` command is using html table:
 ```
 const displayHelp = () => {
 	const tableStart = "<table class='confront-table'>";
@@ -211,7 +237,7 @@ const displayHelp = () => {
 const commands = {
     "help": {
         cmd: () => displayHelp(),
-        desc: translation["desc.help"],
+        desc: "Displays this help",
         type: "html",
     },
 }
@@ -228,11 +254,11 @@ const config = {
 };
 ConFront(commands, config);
 ```
-| Parameter     | Description   | Possible options | Default |
-| ------------ | ------------- | --------------- | ------- |
-| shortcutActivator      | Key to be pressed to activate shortcut| "ctrl", "ctrl+shift", "ctrl+alt" | "ctrl" |
-| shortcutKeyCode      | Code of the key to be pressed when activator enabled      | See [keycode.info](http://keycode.info) | 220 |
-| convertTypes | Automatically convert types from string   | true, false | true |
+| Parameter         | Description                                                  | Possible options                          | Default value |
+| ---------------- | --------------------------------------------------------- | --------------------------------------- | ------------ |
+| shortcutActivator | Key to be pressed to activate shortcut                       | "ctrl", "ctrl+shift", "ctrl+alt"          | "ctrl"        |
+| shortcutKeyCode   | Code of the key to be pressed when activator enabled         | See [keycode.info](http://keycode.info) | 220           |
+| convertTypes      | Automatically convert types from string (number and boolean) | true, false                               | true          |
 
 ## Translation
 There are some build in strings that can be translated. Custom translation can be passed as a third argument to ConFront:
@@ -252,17 +278,6 @@ Here are all the default values:
 	"historyCleared": "History cleared",
 }
 ```
-
-## Use cases
-ConFront is designed to help web app admins save time by simplifying their everyday tasks into easy to remember, customizable commands.
-These command can utilize REST API functions that are already in your app.
-| Task | Example command |
-| ---- | -------------------------- |
-| Clear cache | `clearcache` | 
-| Add user | `adduser "John Smith" --group Users` | 
-| Change user permissions and email | `changeuser 123456 --group Admins --email newemail@example.com` | 
-| Backup database | `db backup` | 
-| Backup database (with additional flags) | `db backup -anq` | 
 
 ## License
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
