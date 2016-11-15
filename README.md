@@ -1,9 +1,12 @@
 # ConFront
-Super handy, fully customizable CLI for the web. Think of it as a command line of your operating system that you know and love, but inside your web app.
+Super handy, fully customizable **CLI for the web**. 
+
+Think of it as a command line of your operating system that you know and love, but inside your web app.
 
 ## Description
-ConFront is designed for (but not limited to) web app admins to help them save time by converting their everyday tasks into simple, easy to remember, customizable commands.
-These commands can utilize REST API functions that are already in your app.
+ConFront is designed to help web app admins save precious time by converting their everyday tasks into simple, easy to remember, **customizable commands**.
+
+These commands can **utilize REST API functions that are already in your app**.
 
 ### Example use case
 Let's say your web app has an administration page where admin can log in and perform some repeatable tasks. This page contains:
@@ -11,6 +14,7 @@ Let's say your web app has an administration page where admin can log in and per
 * Add user form
 * Edit user form
 * Backup database form with some checkboxes and datepicker for additional options
+
 All of these call specific functions that send REST requests to the backend using promises. After promise is resolved/rejected proper notification is displayed containing server response.
 
 This is where ConFront comes in. You can perform the same tasks but much quicker and simpler. Just like using command line in your operating system. Simply open ConFront (`` CTRL+` `` on Win/Linux or `` Control+` `` on mac) and enter your command. For example: 
@@ -64,10 +68,12 @@ For ConFront to work properly you need to style it with CSS. You can use default
 
 ## Getting started
 After you have ConFront running, open your app and simply press `` CTRL+` `` (Windows/Linux) or `` Control+` `` (macOS). This shortcut can be [configured](#Configuration). 
+
 Type in `help` and press Enter/Return to see all the currently available commands. 
 
 ### Custom commands 
 ConFront is pretty much useless until you power it up with your custom commands. You can pass them as the object in the first argument when calling ConFront().
+
 Let's create a simple command that adds together two given numbers:
 ```javascript
 ConFront({
@@ -172,6 +178,7 @@ And long flags:
 
 ### Promises
 ConFront was designed with promises in mind, so you don't have to worry about it. ConFront waits for promise to be resolved or rejected and in the meantime shows a spinner animation. When the promise is fulfilled, it displays the result (if resolved) or error (if rejected).
+
 Example:
 ```javascript
 function promiseme() {
