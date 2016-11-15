@@ -14,6 +14,7 @@ Let's say your web app has an administration page where admin can log in and per
 All of these call specific functions that send REST requests to the backend using promises. After promise is resolved/rejected proper notification is displayed containing server response.
 
 This is where ConFront comes in. You can perform the same tasks but much quicker and simpler. Just like using command line in your operating system. Simply open ConFront (`` CTRL+` `` on Win/Linux or `` Control+` `` on mac) and enter your command. For example: 
+
 | Task                                    | Example command                                                 |
 | --------------------------------------- | --------------------------------------------------------------- |
 | Clear cache                             | `clearcache`                                                    |
@@ -45,6 +46,7 @@ ConFront();
 
 ### Script src
 **It's strongly recommended to use ES6 Import as shown above instead of this**
+
 You can use ConFront by adding script tag to your HTML:
 ```html
 <script src="./node_modules/confront/dist/confront.js"></script>
@@ -101,18 +103,18 @@ Let's enhance "add" command a little by adding support for `-a` flag that change
 And while we're at it, let's do some code separation for better readability.
 ```javascript
 function add(args, flags) {
-    if (flags['a']) {
+    if (flags["a"]) {
         return args.reduce((total, number) => total + number);
     } else {
         return args[0] + args[1];
     }
 }
-const commands: {
+const commands = {
     "add": {
         cmd: (args, flags) => add(args, flags),
         desc: "Adds together two numbers"
     }
-}
+};
 ConFront(commands);
 ```
 ```
@@ -123,20 +125,20 @@ ConFront(commands);
 It also supports long flags, like `--limit`. Also all flags can have their own arguments. Here's the example:
 ```javascript
 function add(args, shortFlags, longFlags) {
-    if (shortFlags['a'] || longFlags['all']) {
+    if (shortFlags["a"] || longFlags["all"]) {
         return args.reduce((total, number) => total + number);
-    } else if (longFlags['limit']) {
-        return args.slice(0, longFlags['limit']).reduce((total, number) => total + number);
+    } else if (longFlags["limit"]) {
+        return args.slice(0, longFlags["limit"]).reduce((total, number) => total + number);
     } else {
         return args[0] + args[1];
     }
 }
-const commands: {
+const commands = {
     "add": {
         cmd: (args, shortFlags, longFlags) => add(args, shortFlags, longFlags),
         desc: "Adds together two numbers"
     }
-}
+};
 ConFront(commands);
 ```
 ```
@@ -153,15 +155,15 @@ Short flags can be grouped. For example command:
 backupdb -azm "My backup" --date 2016.11.11 --log info email 7
 ```
 Will give you this short flags object:
-```javascript
+```json
 {
-    a: [],
-    z: [],
-    m: ["My backup"]
+    "a": [],
+    "z": [],
+    "m": ["My backup"]
 }
 ```
 And long flags:
-```javascript
+```json
 {
     "date": ["2016.11.11"],
     "log":  ["info", "email", 7]
@@ -188,7 +190,7 @@ function rejectme() {
     })
 }
 
-const commands: {
+const commands = {
     "promiseme": {
         cmd: () => promiseme(),
         desc: "returns promise (resolved)"
@@ -197,7 +199,7 @@ const commands: {
         cmd: () => rejectme(),
         desc: "returns promise (rejected)"
     },
-}
+};
 ConFront(commands);
 ```
 ```
@@ -222,7 +224,7 @@ ConFront(commands);
 ### HTML
 Your command can also return HTML which will be displayed inside ConFront. ConFront will try to guess if the returned value is HTML, but you can spare it the work by explicitly setting type to "html". 
 It's useful especially when we need to format the outcome, for example built-in `help` command is using html table:
-```
+```javascript
 const displayHelp = () => {
 	const tableStart = "<table class='confront-table'>";
 	const tableEnd = "</table>";
@@ -240,7 +242,7 @@ const commands = {
         desc: "Displays this help",
         type: "html",
     },
-}
+};
 ConFront(commands);
 ```
 
@@ -254,11 +256,11 @@ const config = {
 };
 ConFront(commands, config);
 ```
-| Parameter         | Description                                                  | Possible options                          | Default value |
-| ---------------- | --------------------------------------------------------- | --------------------------------------- | ------------ |
-| shortcutActivator | Key to be pressed to activate shortcut                       | "ctrl", "ctrl+shift", "ctrl+alt"          | "ctrl"        |
+| Parameter         | Description                                                  | Possible options                        | Default value |
+| ----------------- | ------------------------------------------------------------ | --------------------------------------- | ------------- |
+| shortcutActivator | Key to be pressed to activate shortcut                       | "ctrl", "ctrl+shift", "ctrl+alt"        | "ctrl"        |
 | shortcutKeyCode   | Code of the key to be pressed when activator enabled         | See [keycode.info](http://keycode.info) | 220           |
-| convertTypes      | Automatically convert types from string (number and boolean) | true, false                               | true          |
+| convertTypes      | Automatically convert types from string (number and boolean) | true, false                             | true          |
 
 ## Translation
 There are some build in strings that can be translated. Custom translation can be passed as a third argument to ConFront:
@@ -269,13 +271,13 @@ const translation = {
 ConFront(commands, config, translation);
 ```
 Here are all the default values:
-```javascript
+```json
 {
 	"desc.clear": "Clears console",
 	"desc.clearHistory": "Clears history",
 	"desc.help": "This help",
 	"err.cmdNotFound": "Command not found",
-	"historyCleared": "History cleared",
+	"historyCleared": "History cleared"
 }
 ```
 
