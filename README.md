@@ -1,7 +1,7 @@
 # ConFront
 Super handy, fully customizable **CLI for the web**. 
 
-Think of it as a command line of your operating system that you know and love, but inside your web app.
+Think of it as a command line interface of your operating system that you know and love, but inside your web app.
 
 ## Description
 ConFront is designed to help web app admins save precious time by converting their everyday tasks into simple, easy to remember, **customizable commands**.
@@ -17,7 +17,7 @@ Let's say your web app has an administration page where admin can log in and per
 
 All of these call specific functions that send REST requests to the backend using promises. After promise is resolved/rejected proper notification is displayed containing server response.
 
-This is where ConFront comes in. You can perform the same tasks but much quicker and simpler. Just like using command line in your operating system. Simply open ConFront (`` CTRL+` `` on Win/Linux or `` Control+` `` on mac) and enter your command. For example: 
+This is where ConFront comes in. You can perform the same tasks but much quicker and simpler. Just like using terminal in your operating system. Simply open ConFront (`` CTRL+` `` on Win/Linux or `` Control+` `` on mac) and enter your command. For example: 
 
 | Task                                    | Example command                                                 |
 | --------------------------------------- | --------------------------------------------------------------- |
@@ -61,18 +61,46 @@ ConFront.default();
 ```
 
 ### CSS
-For ConFront to work properly you need to style it with CSS. You can use default styles:
+For ConFront to work properly you need to style it with CSS. You can use the default styles:
 ```html
 <link rel="stylesheet" href="./node_modules/confront/dist/confront.css">
 ```
 
 ## Getting started
+
+###Basic usage
 After you have ConFront running, open your app and simply press `` CTRL+` `` (Windows/Linux) or `` Control+` `` (macOS). This shortcut can be [configured](#Configuration). 
 
-Type in `help` and press Enter/Return to see all the currently available commands. 
+Type in `help` and press Enter/Return to see all the currently available commands.
+
+### Syntax
+```
+<command_name> [<argument>...] [<flag>... [<flag_argument>...]]... 
+```
+
+Here's how to read the above:
+
+| Notation                        | Description                                   |
+| ------------------------------- | --------------------------------------------- |
+| `<Text inside angle brackets>`  | Placeholder for which you must supply a value |
+| `[Text inside square brackets]` | Optional items                                |
+| `{Text inside braces}`          | Set of required items; choose one             |
+| `Ellipsis (…)`                  | Items that can be repeated                    |
+
+In other words:
+
+1. Name of command (**the only thing required, rest is optional**)
+2. Space
+3. List of arguments separated by spaces (if argument has a space inside, you can wrap it with double-quotes: `command short_arg "long argument"`)
+4. Space
+5. List of short (prefixed with `-`) and long (prefixed with `--`) flags separated by spaces. Each flag can have their own list of arguments separated by spaces
+
+NOTICE:
+* Short flags can be grouped following one `-` sign without spaces (`-xyz` is equal to `-x -y -z`).
+* Arguments are always assigned to the last flag that proceeds them (`command -xyz myarg` means that `myarg` is assigned to `z` flag)
 
 ### Custom commands 
-ConFront is pretty much useless until you power it up with your custom commands. You can pass them as the object in the first argument when calling ConFront().
+ConFront is pretty much useless until you power it up with your custom commands. You can pass commands object as the first argument when calling ConFront.
 
 Let's create a simple command that adds together two given numbers:
 ```javascript
@@ -88,7 +116,7 @@ Now when you open up ConFront in your app and type in `add 1 2`, you'll get the 
 3
 ```
 Adding a custom command makes it visible in **help** - a built-in command that lists all the available commands.
-Specifying additional `"desc"` key in `"add"` object will make it display in help:
+Specifying additional `"desc"` key to `add` command will make it display in help:
 ```javascript
 ConFront({
     "add": {
