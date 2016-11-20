@@ -2,7 +2,7 @@
   "name": "confront",
   "version": "0.8.0",
   "description": "Fully customizable CLI for the web apps",
-  "main": "src/confront.js",
+  "main": "dist/confront.js",
   "scripts": {
     "css": "./node_modules/.bin/lessc --clean-css ./src/confront.less ./dist/confront.css",
     "build": "./node_modules/.bin/rimraf dist && npm run css && ./node_modules/.bin/webpack",
