@@ -90,6 +90,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			_consoleState2.default.loadHistoryFromLocalStorage();
 	
 			_consoleDOM.consoleDOMMethods.createElements();
+			_consoleDOM.consoleDOMMethods.printLine(_config.config.welcomeMessage);
 			_consoleState2.default.setBusy(false);
 			document.addEventListener("keydown", keyDownHandler);
 			_consoleDOM.consoleDOM.wrapper.addEventListener("click", clickHandler);
@@ -8646,7 +8647,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	var defaultConfig = {
 		shortcutActivator: "ctrl",
 		shortcutKeyCode: 192,
-		convertTypes: true
+		convertTypes: true,
+		welcomeMessage: "Welcome to ConFront! Type in 'help' and press enter/return to see available commands"
 	};
 	
 	var initConfig = function initConfig(userConfig) {

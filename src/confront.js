@@ -16,6 +16,7 @@ const ConFront = (userTasks, userConfig, userTranslation) => {
 		consoleState.loadHistoryFromLocalStorage();
 
 		consoleDOMMethods.createElements();
+		consoleDOMMethods.printLine(config.welcomeMessage);
 		consoleState.setBusy(false);
 		document.addEventListener("keydown", keyDownHandler);
 		consoleDOM.wrapper.addEventListener("click", clickHandler);

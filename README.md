@@ -296,6 +296,7 @@ ConFront(commands, config);
 | shortcutActivator | Key to be pressed to activate shortcut                       | "ctrl", "ctrl+shift", "ctrl+alt"        | "ctrl"        |
 | shortcutKeyCode   | Code of the key to be pressed when activator enabled         | See [keycode.info](http://keycode.info) | 220           |
 | convertTypes      | Automatically convert types from string (number and boolean) | true, false                             | true          |
+| welcomeMessage    | Message that is shown at the top when running ConFront       | Any string                              |               |
 
 ## Translation
 There are some build in strings that can be translated. Custom translation can be passed as a third argument to ConFront:
