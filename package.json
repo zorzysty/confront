@@ -1,6 +1,6 @@
 {
   "name": "confront",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "description": "Fully customizable CLI for the web apps",
   "main": "dist/confront.js",
   "scripts": {
