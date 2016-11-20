@@ -5,10 +5,11 @@
   "main": "dist/confront.js",
   "scripts": {
     "css": "./node_modules/.bin/lessc --clean-css ./src/confront.less ./dist/confront.css",
-    "build": "./node_modules/.bin/rimraf dist && npm run css && ./node_modules/.bin/webpack",
-    "watch": "watch 'npm run build && npm run start' ./src ./demo",
-    "start": "./node_modules/.bin/http-server",
-    "demo": "cp ./dist/*.{js,css} ./demo"
+    "clean": "./node_modules/.bin/rimraf dist && ./node_modules/.bin/rimraf build",
+    "build": "npm run clean && npm run css && ./node_modules/.bin/webpack && mkdir -p ./build && cp ./src/{index.html,demo.css} ./build",
+    "build:demo": "cp ./dist/*.{js,css} ./demo",
+    "watch": "watch 'npm run build && npm run start' ./src",
+    "start": "./node_modules/.bin/http-server"
   },
   "repository": {
     "type": "git",
