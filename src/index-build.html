@@ -6,7 +6,7 @@
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
 	<title>ConFront Demo</title>
 	<link rel="stylesheet" href="./demo.css">
-	<link rel="stylesheet" href="./confront.css">
+	<link rel="stylesheet" href="../dist/confront.css">
 </head>
 <body>
 <h1>ConFront Demo</h1>
@@ -22,9 +22,10 @@
 	<li>... and now you get how flags and arguments are working</li>
 </ul>
 
-<h3 class="center">Go to <a href="https://zorzysty.github.io/confront">https://zorzysty.github.io/confront</a> to learn more</h3>
+<h3 class="center">Go to <a href="https://zorzysty.github.io/confront">https://zorzysty.github.io/confront</a> to learn
+	more</h3>
 
-<script src="./confront.js"></script>
+<script src="../dist/confront.js"></script>
 <script>
 	function process() {
 		return {
@@ -40,7 +41,7 @@
 		}
 		if (shortFlags['a'] || longFlags['all']) {
 			return args.reduce((total, number) => total + number);
-		} else if (longFlags['limit']){
+		} else if (longFlags['limit']) {
 			return args.slice(0, longFlags['limit']).reduce((total, number) => total + number);
 		} else {
 			return args[0] + args[1];
@@ -72,9 +73,9 @@
 	}
 
 	const config = {
-		shortcutActivator: "ctrl",
-		// shortcutKeyCode: 220,
-		// convertTypes: false,
+//		shortcutActivator: "ctrl",
+//		 shortcutKeyCode: 220,
+//		 convertTypes: false,
 	};
 
 	const translation = {

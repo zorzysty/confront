@@ -5,9 +5,9 @@
   "main": "dist/confront.js",
   "scripts": {
     "css": "./node_modules/.bin/lessc --clean-css ./src/confront.less ./dist/confront.css",
-    "clean": "./node_modules/.bin/rimraf ./dist./* && ./node_modules/.bin/rimraf ./build/*",
-    "build": "npm run css && ./node_modules/.bin/webpack && mkdir -p ./build && cp ./src/{index.html,demo.css} ./build",
-    "build:demo": "cp ./dist/confront.{js,css} ./demo && cp ./src/{demo.css,index.html} ./demo",
+    "clean": "./node_modules/.bin/rimraf ./dist/*.* && ./node_modules/.bin/rimraf ./build/*.*",
+    "build": "npm run css && ./node_modules/.bin/webpack && mkdir -p ./build && cp ./src/index-build.html ./build/index.html && cp ./src/demo.css ./build",
+    "build:demo": "cp ./dist/confront.{js,css} ./demo && cp ./src/demo.css ./demo && cp ./src/index-demo.html ./demo/index.html",
     "build:bundle": "npm run clean && npm run build && npm run build:demo && npm run uglify",
     "watch": "watch 'npm run build && npm run start' ./src",
     "start": "./node_modules/.bin/http-server",
