@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Confront by zorzysty</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">Confront</h1>
+      <h2 class="project-tagline">ConFront - fully customizable CLI for web apps. It is designed to help web app admins save precious time by converting their everyday tasks into simple, easy to remember, customizable commands.</h2>
+      <a href="https://github.com/zorzysty/confront" class="btn">View on GitHub</a>
+      <a href="https://github.com/zorzysty/confront/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/zorzysty/confront/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h1>
+<a id="confront" class="anchor" href="#confront" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>ConFront</h1>
+
+<p>Fully customizable <strong>CLI for web apps</strong>. </p>
+
+<p>Think of it as a command line interface of your operating system that you know and love, but inside your web app.</p>
+
+<h2>
+<a id="description" class="anchor" href="#description" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Description</h2>
+
+<p>ConFront is designed to help web app admins save precious time by converting their everyday tasks into simple, easy to remember, <strong>customizable commands</strong>.</p>
+
+<p>These commands can <strong>utilize REST API functions that are already in your app</strong>.</p>
+
+<h3>
+<a id="example-use-case" class="anchor" href="#example-use-case" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Example use case</h3>
+
+<p>Let's say your web app has an administration page where admin can log in and perform some repeatable tasks. This page contains:</p>
+
+<ul>
+<li>Clear cache button</li>
+<li>Add user form</li>
+<li>Edit user form</li>
+<li>Backup database form with some checkboxes and datepicker for additional options</li>
+</ul>
+
+<p>All of these call specific functions that send REST requests to the backend using promises. After promise is resolved/rejected proper notification is displayed containing server response.</p>
+
+<p>This is where ConFront comes in. You can perform the same tasks but much quicker and simpler. Just like using terminal in your operating system. Simply open ConFront (<code>CTRL+`</code> on Win/Linux or <code>Control+`</code> on mac) and enter your command. For example: </p>
+
+<table>
+<thead>
+<tr>
+<th>Task</th>
+<th>Example command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Clear cache</td>
+<td><code>clearcache</code></td>
+</tr>
+<tr>
+<td>Add user</td>
+<td><code>adduser "John Smith" --group Users</code></td>
+</tr>
+<tr>
+<td>Change user permissions and email</td>
+<td><code>changeuser 123456 --group Admins --email newemail@example.com</code></td>
+</tr>
+<tr>
+<td>Backup database</td>
+<td><code>db backup</code></td>
+</tr>
+<tr>
+<td>Backup database (with additional flags)</td>
+<td><code>db backup -aq --date 2016.11.11</code></td>
+</tr>
+</tbody>
+</table>
+
+<h2>
+<a id="features" class="anchor" href="#features" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Features</h2>
+
+<ul>
+<li>Custom commands</li>
+<li>Supports promises, multiple arguments and flags </li>
+<li>Sync and async error handling</li>
+<li>Tab auto-completion</li>
+<li>Command history with up and down arrows</li>
+<li>Works with every framework</li>
+<li>No external dependencies</li>
+<li>Custom css templates</li>
+</ul>
+
+<h2>
+<a id="installing" class="anchor" href="#installing" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Installing</h2>
+
+<pre><code>npm install confront --save
+</code></pre>
+
+<h3>
+<a id="es6-import" class="anchor" href="#es6-import" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>ES6 Import</h3>
+
+<pre><code>import ConFront from "confront";
+ConFront();
+</code></pre>
+
+<h3>
+<a id="script-src" class="anchor" href="#script-src" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Script src</h3>
+
+<p><strong>It's strongly recommended to use ES6 Import as shown above instead of this</strong></p>
+
+<p>You can use ConFront by adding script tag to your HTML:</p>
+
+<div class="highlight highlight-text-html-basic"><pre>&lt;<span class="pl-ent">script</span> <span class="pl-e">src</span>=<span class="pl-s"><span class="pl-pds">"</span>./node_modules/confront/dist/confront.js<span class="pl-pds">"</span></span>&gt;&lt;/<span class="pl-ent">script</span>&gt;</pre></div>
+
+<p>It exposes window.ConFront and you can use it like this:</p>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-smi">ConFront</span>.<span class="pl-en">default</span>();</pre></div>
+
+<h3>
+<a id="css" class="anchor" href="#css" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>CSS</h3>
+
+<p>For ConFront to work properly you need to style it with CSS. You can use the default styles:</p>
+
+<div class="highlight highlight-text-html-basic"><pre>&lt;<span class="pl-ent">link</span> <span class="pl-e">rel</span>=<span class="pl-s"><span class="pl-pds">"</span>stylesheet<span class="pl-pds">"</span></span> <span class="pl-e">href</span>=<span class="pl-s"><span class="pl-pds">"</span>./node_modules/confront/dist/confront.css<span class="pl-pds">"</span></span>&gt;</pre></div>
+
+<h2>
+<a id="getting-started" class="anchor" href="#getting-started" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Getting started</h2>
+
+<h3>
+<a id="basic-usage" class="anchor" href="#basic-usage" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Basic usage</h3>
+
+<p>After you have ConFront running, open your app and simply press <code>CTRL+`</code> (Windows/Linux) or <code>Control+`</code> (macOS). This shortcut can be <a href="#Configuration">configured</a>. </p>
+
+<p>Type in <code>help</code> and press Enter/Return to see all the currently available commands.</p>
+
+<h3>
+<a id="syntax" class="anchor" href="#syntax" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Syntax</h3>
+
+<pre><code>&lt;command_name&gt; [&lt;argument&gt;...] [&lt;flag&gt; [&lt;flag_argument&gt;...]]... 
+</code></pre>
+
+<p>Here's how to read the above:</p>
+
+<table>
+<thead>
+<tr>
+<th>Notation</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>&lt;Text inside angle brackets&gt;</code></td>
+<td>Placeholder for which you must supply a value</td>
+</tr>
+<tr>
+<td><code>[Text inside square brackets]</code></td>
+<td>Optional items</td>
+</tr>
+<tr>
+<td><code>Ellipsis (…)</code></td>
+<td>Items that can be repeated</td>
+</tr>
+</tbody>
+</table>
+
+<p>In other words:</p>
+
+<ol>
+<li>Name of command (<strong>the only thing required, rest is optional</strong>)</li>
+<li>Space</li>
+<li>List of arguments separated by spaces (if argument has a space inside, you can wrap it with double-quotes: <code>command short_arg "long argument"</code>)</li>
+<li>Space</li>
+<li>List of short (prefixed with <code>-</code>) and long (prefixed with <code>--</code>) flags separated by spaces. Each flag can have their own list of arguments separated by spaces</li>
+</ol>
+
+<p>NOTICE:</p>
+
+<ul>
+<li>Short flags can be grouped following one <code>-</code> sign without spaces (<code>-xyz</code> is equal to <code>-x -y -z</code>).</li>
+<li>Arguments are always assigned to the last flag that proceeds them (<code>command -xyz myarg</code> means that <code>myarg</code> is assigned to <code>z</code> flag)</li>
+</ul>
+
+<h3>
+<a id="custom-commands" class="anchor" href="#custom-commands" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Custom commands</h3>
+
+<p>ConFront is pretty much useless until you power it up with your custom commands. You can pass commands object as the first argument when calling ConFront.</p>
+
+<p>Let's create a simple command that adds together two given numbers:</p>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-en">ConFront</span>({
+    <span class="pl-s"><span class="pl-pds">"</span>add<span class="pl-pds">"</span></span><span class="pl-k">:</span> {
+        <span class="pl-en">cmd</span><span class="pl-k">:</span> (<span class="pl-smi">args</span>) <span class="pl-k">=&gt;</span> args[<span class="pl-c1">0</span>] <span class="pl-k">+</span> args[<span class="pl-c1">1</span>]
+    }
+});</pre></div>
+
+<p>Now when you open up ConFront in your app and type in <code>add 1 2</code>, you'll get the result displayed as expected.</p>
+
+<pre><code>&gt; add 1 2
+3
+</code></pre>
+
+<p>Adding a custom command makes it visible in <strong>help</strong> - a built-in command that lists all the available commands.
+Specifying additional <code>"desc"</code> key to <code>add</code> command will make it display in help:</p>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-en">ConFront</span>({
+    <span class="pl-s"><span class="pl-pds">"</span>add<span class="pl-pds">"</span></span><span class="pl-k">:</span> {
+        <span class="pl-en">cmd</span><span class="pl-k">:</span> (<span class="pl-smi">args</span>) <span class="pl-k">=&gt;</span> args[<span class="pl-c1">0</span>] <span class="pl-k">+</span> args[<span class="pl-c1">1</span>],
+        desc<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>Adds together two numbers<span class="pl-pds">"</span></span>
+    }
+});</pre></div>
+
+<pre><code>&gt; help
+add:            Adds together two numbers
+clear:          Clears console 
+clearhistory:   Clears history 
+help:           This help
+</code></pre>
+
+<h3>
+<a id="flags" class="anchor" href="#flags" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Flags</h3>
+
+<p>Let's enhance "add" command a little by adding support for <code>-a</code> flag that changes command behaviour so that it sums all the given numbers instead of the first two.
+And while we're at it, let's do some code separation for better readability.</p>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-k">function</span> <span class="pl-en">add</span>(<span class="pl-smi">args</span>, <span class="pl-smi">flags</span>) {
+    <span class="pl-k">if</span> (flags[<span class="pl-s"><span class="pl-pds">"</span>a<span class="pl-pds">"</span></span>]) {
+        <span class="pl-k">return</span> <span class="pl-smi">args</span>.<span class="pl-en">reduce</span>((<span class="pl-smi">total</span>, <span class="pl-smi">number</span>) <span class="pl-k">=&gt;</span> total <span class="pl-k">+</span> number);
+    } <span class="pl-k">else</span> {
+        <span class="pl-k">return</span> args[<span class="pl-c1">0</span>] <span class="pl-k">+</span> args[<span class="pl-c1">1</span>];
+    }
+}
+<span class="pl-k">const</span> <span class="pl-c1">commands</span> <span class="pl-k">=</span> {
+    <span class="pl-s"><span class="pl-pds">"</span>add<span class="pl-pds">"</span></span><span class="pl-k">:</span> {
+        <span class="pl-en">cmd</span><span class="pl-k">:</span> (<span class="pl-smi">args</span>, <span class="pl-smi">flags</span>) <span class="pl-k">=&gt;</span> <span class="pl-en">add</span>(args, flags),
+        desc<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>Adds together two numbers<span class="pl-pds">"</span></span>
+    }
+};
+<span class="pl-en">ConFront</span>(commands);</pre></div>
+
+<pre><code>&gt; add 1 2 3 4 5 -a
+15
+</code></pre>
+
+<p>It also supports long flags, like <code>--limit</code>. Also all flags can have their own arguments. Here's the example:</p>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-k">function</span> <span class="pl-en">add</span>(<span class="pl-smi">args</span>, <span class="pl-smi">shortFlags</span>, <span class="pl-smi">longFlags</span>) {
+    <span class="pl-k">if</span> (shortFlags[<span class="pl-s"><span class="pl-pds">"</span>a<span class="pl-pds">"</span></span>] <span class="pl-k">||</span> longFlags[<span class="pl-s"><span class="pl-pds">"</span>all<span class="pl-pds">"</span></span>]) {
+        <span class="pl-k">return</span> <span class="pl-smi">args</span>.<span class="pl-en">reduce</span>((<span class="pl-smi">total</span>, <span class="pl-smi">number</span>) <span class="pl-k">=&gt;</span> total <span class="pl-k">+</span> number);
+    } <span class="pl-k">else</span> <span class="pl-k">if</span> (longFlags[<span class="pl-s"><span class="pl-pds">"</span>limit<span class="pl-pds">"</span></span>]) {
+        <span class="pl-k">return</span> <span class="pl-smi">args</span>.<span class="pl-c1">slice</span>(<span class="pl-c1">0</span>, longFlags[<span class="pl-s"><span class="pl-pds">"</span>limit<span class="pl-pds">"</span></span>]).<span class="pl-en">reduce</span>((<span class="pl-smi">total</span>, <span class="pl-smi">number</span>) <span class="pl-k">=&gt;</span> total <span class="pl-k">+</span> number);
+    } <span class="pl-k">else</span> {
+        <span class="pl-k">return</span> args[<span class="pl-c1">0</span>] <span class="pl-k">+</span> args[<span class="pl-c1">1</span>];
+    }
+}
+<span class="pl-k">const</span> <span class="pl-c1">commands</span> <span class="pl-k">=</span> {
+    <span class="pl-s"><span class="pl-pds">"</span>add<span class="pl-pds">"</span></span><span class="pl-k">:</span> {
+        <span class="pl-en">cmd</span><span class="pl-k">:</span> (<span class="pl-smi">args</span>, <span class="pl-smi">shortFlags</span>, <span class="pl-smi">longFlags</span>) <span class="pl-k">=&gt;</span> <span class="pl-en">add</span>(args, shortFlags, longFlags),
+        desc<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>Adds together two numbers<span class="pl-pds">"</span></span>
+    }
+};
+<span class="pl-en">ConFront</span>(commands);</pre></div>
+
+<pre><code>&gt; add 1 2 3 4 5 --limit 3
+6
+&gt; add 1 2 3 4 5 --limit 1
+1
+&gt; add 1 2 3 4 5 --limit 4
+10
+</code></pre>
+
+<p>Short flags can be grouped. For example command:</p>
+
+<pre><code>backupdb -azm "My backup" --date 2016.11.11 --log info email 7
+</code></pre>
+
+<p>Will give you this short flags object:</p>
+
+<div class="highlight highlight-source-json"><pre>{
+    <span class="pl-s"><span class="pl-pds">"</span>a<span class="pl-pds">"</span></span>: [],
+    <span class="pl-s"><span class="pl-pds">"</span>z<span class="pl-pds">"</span></span>: [],
+    <span class="pl-s"><span class="pl-pds">"</span>m<span class="pl-pds">"</span></span>: [<span class="pl-s"><span class="pl-pds">"</span>My backup<span class="pl-pds">"</span></span>]
+}</pre></div>
+
+<p>And long flags:</p>
+
+<div class="highlight highlight-source-json"><pre>{
+    <span class="pl-s"><span class="pl-pds">"</span>date<span class="pl-pds">"</span></span>: [<span class="pl-s"><span class="pl-pds">"</span>2016.11.11<span class="pl-pds">"</span></span>],
+    <span class="pl-s"><span class="pl-pds">"</span>log<span class="pl-pds">"</span></span>:  [<span class="pl-s"><span class="pl-pds">"</span>info<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>email<span class="pl-pds">"</span></span>, <span class="pl-c1">7</span>]
+}</pre></div>
+
+<h3>
+<a id="promises" class="anchor" href="#promises" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Promises</h3>
+
+<p>ConFront was designed with promises in mind, so you don't have to worry about it. ConFront waits for promise to be resolved or rejected and in the meantime shows a spinner animation. When the promise is fulfilled, it displays the result (if resolved) or error (if rejected).</p>
+
+<p>Example:</p>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-k">function</span> <span class="pl-en">promiseme</span>() {
+    <span class="pl-k">return</span> <span class="pl-k">new</span> <span class="pl-en">Promise</span>((<span class="pl-smi">resolve</span>) <span class="pl-k">=&gt;</span> {
+        <span class="pl-c1">setTimeout</span>(<span class="pl-k">function</span> () {
+            <span class="pl-en">resolve</span>([<span class="pl-s"><span class="pl-pds">'</span>from resolved promise<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">"</span>dsadsada<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">'</span>222<span class="pl-pds">'</span></span>, {<span class="pl-s"><span class="pl-pds">"</span>aaa<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-c1">22</span>, <span class="pl-s"><span class="pl-pds">"</span>ss<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-c1">4</span>}]);
+        }, <span class="pl-c1">2000</span>)
+    })
+}
+
+<span class="pl-k">function</span> <span class="pl-en">rejectme</span>() {
+    <span class="pl-k">return</span> <span class="pl-k">new</span> <span class="pl-en">Promise</span>((<span class="pl-smi">resolve</span>, <span class="pl-smi">reject</span>) <span class="pl-k">=&gt;</span> {
+        <span class="pl-c1">setTimeout</span>(<span class="pl-k">function</span> () {
+            <span class="pl-en">reject</span>(<span class="pl-s"><span class="pl-pds">"</span>Promise rejected<span class="pl-pds">"</span></span>);
+        }, <span class="pl-c1">2000</span>)
+    })
+}
+
+<span class="pl-k">const</span> <span class="pl-c1">commands</span> <span class="pl-k">=</span> {
+    <span class="pl-s"><span class="pl-pds">"</span>promiseme<span class="pl-pds">"</span></span><span class="pl-k">:</span> {
+        <span class="pl-en">cmd</span><span class="pl-k">:</span> () <span class="pl-k">=&gt;</span> <span class="pl-en">promiseme</span>(),
+        desc<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>returns promise (resolved)<span class="pl-pds">"</span></span>
+    },
+    <span class="pl-s"><span class="pl-pds">"</span>rejectme<span class="pl-pds">"</span></span><span class="pl-k">:</span> {
+        <span class="pl-en">cmd</span><span class="pl-k">:</span> () <span class="pl-k">=&gt;</span> <span class="pl-en">rejectme</span>(),
+        desc<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>returns promise (rejected)<span class="pl-pds">"</span></span>
+    },
+};
+<span class="pl-en">ConFront</span>(commands);</pre></div>
+
+<pre><code>&gt; promiseme
+(spinner for two seconds)
+[
+  "from resolved promise",
+  "list item",
+  "222",
+  {
+    "aaa": 22,
+    "ss": 4
+  }
+]
+</code></pre>
+
+<pre><code>&gt; rejectme
+(spinner for two seconds)
+(Error: ) Promise rejected
+</code></pre>
+
+<h3>
+<a id="html" class="anchor" href="#html" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>HTML</h3>
+
+<p>Your command can also return HTML which will be displayed inside ConFront. ConFront will try to guess if the returned value is HTML, but you can spare it the work by explicitly setting type to "html". 
+It's useful especially when we need to format the outcome, for example built-in <code>help</code> command is using html table:</p>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-k">const</span> <span class="pl-c1">displayHelp</span> <span class="pl-k">=</span> () <span class="pl-k">=&gt;</span> {
+    <span class="pl-k">const</span> <span class="pl-c1">tableStart</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>&lt;table class='confront-table'&gt;<span class="pl-pds">"</span></span>;
+    <span class="pl-k">const</span> <span class="pl-c1">tableEnd</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>&lt;/table&gt;<span class="pl-pds">"</span></span>;
+    <span class="pl-k">let</span> rows <span class="pl-k">=</span> [];
+    <span class="pl-c1">Object</span>.<span class="pl-c1">keys</span>(tasks).<span class="pl-c1">forEach</span>((<span class="pl-smi">key</span>) <span class="pl-k">=&gt;</span> {
+        <span class="pl-k">const</span> <span class="pl-c1">name</span> <span class="pl-k">=</span> key;
+        <span class="pl-k">const</span> <span class="pl-c1">desc</span> <span class="pl-k">=</span> tasks[key].<span class="pl-smi">desc</span>;
+        <span class="pl-smi">rows</span>.<span class="pl-c1">push</span>(<span class="pl-s"><span class="pl-pds">`</span>&lt;tr&gt;&lt;td class="confront-label"&gt;<span class="pl-s1"><span class="pl-pse">${</span>name<span class="pl-pse">}</span></span>: &lt;/td&gt;&lt;td class="confront-value"&gt;<span class="pl-s1"><span class="pl-pse">${</span>desc <span class="pl-k">?</span> desc <span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-pds">"</span></span><span class="pl-pse">}</span></span>&lt;/td&gt;<span class="pl-pds">`</span></span>);
+    });
+    <span class="pl-k">return</span> tableStart <span class="pl-k">+</span> <span class="pl-smi">rows</span>.<span class="pl-c1">sort</span>().<span class="pl-c1">join</span>(<span class="pl-s"><span class="pl-pds">"</span><span class="pl-pds">"</span></span>) <span class="pl-k">+</span> tableEnd;
+};
+<span class="pl-k">const</span> <span class="pl-c1">commands</span> <span class="pl-k">=</span> {
+    <span class="pl-s"><span class="pl-pds">"</span>help<span class="pl-pds">"</span></span><span class="pl-k">:</span> {
+        <span class="pl-en">cmd</span><span class="pl-k">:</span> () <span class="pl-k">=&gt;</span> <span class="pl-en">displayHelp</span>(),
+        desc<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>Displays this help<span class="pl-pds">"</span></span>,
+        type<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>html<span class="pl-pds">"</span></span>,
+    },
+};
+<span class="pl-en">ConFront</span>(commands);</pre></div>
+
+<h2>
+<a id="configuration" class="anchor" href="#configuration" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Configuration</h2>
+
+<p>Custom configuration can be passed as a second argument to ConFront. Right now it allows to change three basic values. Here's the example:</p>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-k">const</span> <span class="pl-c1">config</span> <span class="pl-k">=</span> {
+    shortcutActivator<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>ctrl<span class="pl-pds">"</span></span>,
+    shortcutKeyCode<span class="pl-k">:</span> <span class="pl-c1">220</span>,
+    convertTypes<span class="pl-k">:</span> <span class="pl-c1">false</span>,
+};
+<span class="pl-en">ConFront</span>(commands, config);</pre></div>
+
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+<th>Possible options</th>
+<th>Default value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>shortcutActivator</td>
+<td>Key to be pressed to activate shortcut</td>
+<td>"ctrl", "ctrl+shift", "ctrl+alt"</td>
+<td>"ctrl"</td>
+</tr>
+<tr>
+<td>shortcutKeyCode</td>
+<td>Code of the key to be pressed when activator enabled</td>
+<td>See <a href="http://keycode.info">keycode.info</a>
+</td>
+<td>220</td>
+</tr>
+<tr>
+<td>convertTypes</td>
+<td>Automatically convert types from string (number and boolean)</td>
+<td>true, false</td>
+<td>true</td>
+</tr>
+<tr>
+<td>welcomeMessage</td>
+<td>Message that is shown at the top when running ConFront</td>
+<td>Any string</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+
+<h2>
+<a id="translation" class="anchor" href="#translation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Translation</h2>
+
+<p>There are some build in strings that can be translated. Custom translation can be passed as a third argument to ConFront:</p>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-k">const</span> <span class="pl-c1">translation</span> <span class="pl-k">=</span> {
+    <span class="pl-s"><span class="pl-pds">"</span>err.cmdNotFound<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>Custom command not found translation<span class="pl-pds">"</span></span>
+};
+<span class="pl-en">ConFront</span>(commands, config, translation);</pre></div>
+
+<p>Here are all the default values:</p>
+
+<div class="highlight highlight-source-json"><pre>{
+    <span class="pl-s"><span class="pl-pds">"</span>desc.clear<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>Clears console<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>desc.clearHistory<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>Clears history<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>desc.help<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>This help<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>err.cmdNotFound<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>Command not found<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>historyCleared<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>History cleared<span class="pl-pds">"</span></span>
+}</pre></div>
+
+<h2>
+<a id="license" class="anchor" href="#license" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>License</h2>
+
+<p>This project is licensed under the MIT License - see the <a href="LICENSE.md">LICENSE.md</a> file for details</p>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/zorzysty/confront">Confront</a> is maintained by <a href="https://github.com/zorzysty">zorzysty</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
