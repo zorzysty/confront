@@ -1,5 +1,5 @@
 # ConFront
-Super handy, fully customizable **CLI for web apps**. 
+Fully customizable **CLI for web apps**. 
 
 Think of it as a command line interface of your operating system that you know and love, but inside your web app.
 
