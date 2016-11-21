@@ -75,7 +75,7 @@ Type in `help` and press Enter/Return to see all the currently available command
 
 ### Syntax
 ```
-<command_name> [<argument>...] [<flag>... [<flag_argument>...]]... 
+<command_name> [<argument>...] [<flag> [<flag_argument>...]]... 
 ```
 
 Here's how to read the above:
@@ -84,7 +84,6 @@ Here's how to read the above:
 | ------------------------------- | --------------------------------------------- |
 | `<Text inside angle brackets>`  | Placeholder for which you must supply a value |
 | `[Text inside square brackets]` | Optional items                                |
-| `{Text inside braces}`          | Set of required items; choose one             |
 | `Ellipsis (…)`                  | Items that can be repeated                    |
 
 In other words:
