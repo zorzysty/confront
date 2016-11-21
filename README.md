@@ -8,6 +8,10 @@ ConFront is designed to help web app admins save precious time by converting the
 
 These commands can **utilize REST API functions that are already in your app**.
 
+## Demo
+
+https://zorzysty.github.io/confront/demo/
+
 ### Example use case
 Let's say your web app has an administration page where admin can log in and perform some repeatable tasks. This page contains:
 * Clear cache button
