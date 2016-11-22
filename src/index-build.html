@@ -20,6 +20,7 @@
 	<li>Type in <code>add 1 2 3 4 --all</code></li>
 	<li>Type in <code>add 1 2 3 4 --limit 3</code></li>
 	<li>... and now you get how flags and arguments are working</li>
+	<li>So include <a href="https://github.com/zorzysty/confront">ConFront</a> in your web app and add your own custom commands to fulfill your needs</li>
 </ul>
 
 <h3 class="center">Go to <a href="https://zorzysty.github.io/confront">https://zorzysty.github.io/confront</a> to learn
@@ -29,9 +30,9 @@
 <script>
 	function process() {
 		return {
-			"aaa": 22,
-			"ss": 4,
-			"arr": ['dsada', "dsadsada", '222', {"aaa": 22, "ss": 4}]
+			"notice": "that",
+			"JSON": "isNicelyFormatted",
+			"arr": ['it can', "display", 'any kind', {"of": 22, "data": true}]
 		}
 	}
 
@@ -51,7 +52,7 @@
 	function promiseme() {
 		return new Promise((resolve) => {
 			setTimeout(function () {
-				resolve(['from resolved promise', "list item", '222', {"aaa": 22, "ss": 4}]);
+				resolve(['Response from resolved promise', "ConFront works with any kind of promise-based API", 'nice, huh?', {"conFrontIsAwesome": true, "answer": 42}]);
 			}, 2000)
 		})
 	}
@@ -59,7 +60,7 @@
 	function rejectme() {
 		return new Promise((resolve, reject) => {
 			setTimeout(function () {
-				reject("from reject promise");
+				reject("This is response from rejected promise. Colors are fully customizable via CSS.");
 			}, 2000)
 		})
 	}
@@ -79,7 +80,7 @@
 	};
 
 	const translation = {
-		"err.cmdNotFound": "Command was not found (demo translation)"
+		"err.cmdNotFound": "Command was not found"
 	};
 
 	const tasks = {
