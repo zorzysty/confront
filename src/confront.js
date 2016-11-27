@@ -20,6 +20,10 @@ const ConFront = (userTasks, userConfig, userTranslation) => {
 		consoleState.setBusy(false);
 		document.addEventListener("keydown", keyDownHandler);
 		consoleDOM.wrapper.addEventListener("click", clickHandler);
+
+		if (!config.externalCSS) {
+			consoleDOMMethods.styleElements();
+		}
 	};
 
 	const keyDownHandler = (event) => {

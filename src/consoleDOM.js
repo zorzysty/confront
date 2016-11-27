@@ -1,4 +1,6 @@
 import {getTasksNames} from "./tasks";
+import {styles} from "./generated/styles";
+
 let consoleDOM = {};
 
 const consoleDOMMethods = {
@@ -22,6 +24,12 @@ const consoleDOMMethods = {
 		consoleDOM.wrapper.style.display = "none";
 		document.body.appendChild(consoleDOM.wrapper);
 
+	},
+	styleElements: () => {
+		let css = document.createElement("style");
+		css.type = "text/css";
+		css.innerHTML = styles;
+		document.getElementsByTagName("head")[0].appendChild(css);
 	},
 	clearConsole: () => {
 		consoleDOM.output.innerHTML = "";

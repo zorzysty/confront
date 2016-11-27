@@ -63,12 +63,6 @@ It exposes window.ConFront and you can use it like this:
 ConFront.default();
 ```
 
-### CSS
-For ConFront to work properly you need to style it with CSS. You can use the default styles:
-```html
-<link rel="stylesheet" href="./node_modules/confront/dist/confront.css">
-```
-
 ## Getting started
 
 ###Basic usage
@@ -293,12 +287,13 @@ const config = {
 };
 ConFront(commands, config);
 ```
-| Parameter         | Description                                                  | Possible options                        | Default value |
-| ----------------- | ------------------------------------------------------------ | --------------------------------------- | ------------- |
-| shortcutActivator | Key to be pressed to activate shortcut                       | "ctrl", "ctrl+shift", "ctrl+alt"        | "ctrl"        |
-| shortcutKeyCode   | Code of the key to be pressed when activator enabled         | See [keycode.info](http://keycode.info) | 220           |
-| convertTypes      | Automatically convert types from string (number and boolean) | true, false                             | true          |
-| welcomeMessage    | Message that is shown at the top when running ConFront       | Any string                              |               |
+| Parameter         | Description                                                   | Possible options                        | Default value |
+| ----------------- | ------------------------------------------------------------- | --------------------------------------- | ------------- |
+| convertTypes      | Automatically convert types from string (number and boolean)  | true, false                             | true          |
+| externalCSS       | Disables default styles to allow loading of external CSS file | true, false                             | false          |
+| shortcutActivator | Key to be pressed to activate shortcut                        | "ctrl", "ctrl+shift", "ctrl+alt"        | "ctrl"        |
+| shortcutKeyCode   | Code of the key to be pressed when activator enabled          | See [keycode.info](http://keycode.info) | 220           |
+| welcomeMessage    | Message that is shown at the top when running ConFront        | Any string                              |               |
 
 ## Translation
 There are some build in strings that can be translated. Custom translation can be passed as a third argument to ConFront:
