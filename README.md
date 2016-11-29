@@ -36,6 +36,7 @@ This is where ConFront comes in. You can perform the same tasks but much quicker
 * Sync and async error handling
 * Tab auto-completion
 * Command history with up and down arrows
+* Custom aliases for frequently used long commands
 * Works with every framework
 * No external dependencies
 * Custom css templates
@@ -154,7 +155,7 @@ ConFront(commands);
 
 It also supports long flags, like `--limit`. Also all flags can have their own arguments. Here's the example:
 ```javascript
-function add(args, shortFlags, longFlags) {
+function add(args, shortFlags, longFlags, inputValue) {
     if (shortFlags["a"] || longFlags["all"]) {
         return args.reduce((total, number) => total + number);
     } else if (longFlags["limit"]) {
@@ -165,7 +166,7 @@ function add(args, shortFlags, longFlags) {
 }
 const commands = {
     "add": {
-        cmd: (args, shortFlags, longFlags) => add(args, shortFlags, longFlags),
+        cmd: (args, shortFlags, longFlags, inputValue) => add(args, shortFlags, longFlags, inputValue),
         desc: "Adds together two numbers"
     }
 };
@@ -277,8 +278,30 @@ const commands = {
 ConFront(commands);
 ```
 
+### Aliases
+Custom aliases can be created for quick access to frequently used commands with long list of flags and arguments.
+ 
+For example if you happen to use a lot a command that looks like this: `mycommand getdata --date today --user "user name" -rsx`. 
+It could be useful to store it as a alias like `$mc` (name must start with $ sign) and not having to type it every time or search for it in history.
+
+You can set a new alias by simply adding `alias set` at the beginning of your command:
+```
+alias set $mc mycommand getdata --date today --user "user name" -rsx
+```
+
+And from now on it's stored in your browser's local storage, so every time you type in `$mc` and press `<TAB>` key, you'll get your command typed into the console for you.
+
+| Tasks                      | Command                                      |
+| -------------------------- | -------------------------------------------- |
+| List all available aliases | `alias list`                                 |
+| Set new / edit alias       | `alias set $<string> <command to be stored>` |
+| Remove alias               | `alias remove $<string>`                     |
+| Remove all stored aliases  | `alias remove --all`                         |
+
+You can also set pre-defined aliases in your user config object. See [configuration](#Configuration).
+
 ## Configuration
-Custom configuration can be passed as a second argument to ConFront. Right now it allows to change three basic values. Here's the example:
+Custom configuration can be passed as a second argument to ConFront. Here's the example:
 ```javascript
 const config = {
     shortcutActivator: "ctrl",
@@ -290,10 +313,21 @@ ConFront(commands, config);
 | Parameter         | Description                                                   | Possible options                        | Default value |
 | ----------------- | ------------------------------------------------------------- | --------------------------------------- | ------------- |
 | convertTypes      | Automatically convert types from string (number and boolean)  | true, false                             | true          |
-| externalCSS       | Disables default styles to allow loading of external CSS file | true, false                             | false          |
+| externalCSS       | Disables default styles to allow loading of external CSS file | true, false                             | false         |
+| aliases           | Key-value pairs for custom aliases                            | Object                                  | {}            |
 | shortcutActivator | Key to be pressed to activate shortcut                        | "ctrl", "ctrl+shift", "ctrl+alt"        | "ctrl"        |
 | shortcutKeyCode   | Code of the key to be pressed when activator enabled          | See [keycode.info](http://keycode.info) | 220           |
 | welcomeMessage    | Message that is shown at the top when running ConFront        | Any string                              |               |
+
+### Aliases in config
+Proper `aliases` object should look like this:
+```json
+{
+    "$short_cut_name": "command to be executed --with -flags or without them",
+    "$addpi": "add 3 1 4 1 5 9 2 --all",
+    "$bu": "backup --db masterDB --file my_backup.db -fl"
+}
+```
 
 ## Translation
 There are some build in strings that can be translated. Custom translation can be passed as a third argument to ConFront:

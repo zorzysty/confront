@@ -19,7 +19,9 @@
 	<li>Type in <code>add 1 2 3 4 --all</code></li>
 	<li>Type in <code>add 1 2 3 4 --limit 3</code></li>
 	<li>... and now you get how flags and arguments are working</li>
-	<li>So include <a href="https://github.com/zorzysty/confront">ConFront</a> in your web app and add your own custom commands to fulfill your needs</li>
+	<li>So include <a href="https://github.com/zorzysty/confront">ConFront</a> in your web app and add your own custom
+		commands to fulfill your needs
+	</li>
 </ul>
 
 <h3 class="center">Go to <a href="https://zorzysty.github.io/confront">https://zorzysty.github.io/confront</a> to learn
@@ -51,7 +53,10 @@
 	function promiseme() {
 		return new Promise((resolve) => {
 			setTimeout(function () {
-				resolve(['Response from resolved promise', "ConFront works with any kind of promise-based API", 'nice, huh?', {"conFrontIsAwesome": true, "answer": 42}]);
+				resolve(['Response from resolved promise', "ConFront works with any kind of promise-based API", 'nice, huh?', {
+					"conFrontIsAwesome": true,
+					"answer": 42
+				}]);
 			}, 2000)
 		})
 	}

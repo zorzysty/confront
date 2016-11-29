@@ -70,7 +70,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _tasks = __webpack_require__(299);
 	
-	var _helpers = __webpack_require__(304);
+	var _aliases = __webpack_require__(302);
+	
+	var _helpers = __webpack_require__(305);
 	
 	var _consoleState = __webpack_require__(300);
 	
@@ -86,6 +88,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			(0, _config.initConfig)(userConfig);
 			(0, _translation.initTranslation)(userTranslation);
 			(0, _tasks.initTasks)(userTasks, _translation.translation);
+			(0, _aliases.initAliases)();
 	
 			_consoleState2.default.loadHistoryFromLocalStorage();
 	
@@ -171,7 +174,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			}
 	
 			try {
-				var cmdResult = _tasks.tasks[cmd].cmd(args, shortFlags, longFlags);
+				var cmdResult = _tasks.tasks[cmd].cmd(args, shortFlags, longFlags, inputValue);
 			} catch (err) {
 				_consoleDOM.consoleDOMMethods.printLine(err, "error");
 				return;
@@ -8354,7 +8357,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _tasks = __webpack_require__(299);
 	
-	var _styles = __webpack_require__(302);
+	var _aliases = __webpack_require__(302);
+	
+	var _styles = __webpack_require__(304);
 	
 	var consoleDOM = {};
 	
@@ -8450,6 +8455,10 @@ return /******/ (function(modules) { // webpackBootstrap
 			consoleDOMMethods.scrollToBottom();
 		},
 		autoComplete: function autoComplete() {
+			if (consoleDOM.input.value[0] === "$") {
+				consoleDOMMethods.setInputValue((0, _aliases.getAlias)(consoleDOM.input.value));
+				return;
+			}
 			var tasks = (0, _tasks.getTasksNames)();
 			var matching = tasks.filter(function (task) {
 				return task.startsWith(consoleDOM.input.value);
@@ -8493,6 +8502,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _consoleDOM = __webpack_require__(298);
 	
+	var _aliases = __webpack_require__(302);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	var tasks = {};
@@ -8529,6 +8540,12 @@ return /******/ (function(modules) { // webpackBootstrap
 				},
 				desc: translation["desc.help"],
 				type: "html"
+			},
+			"alias": {
+				cmd: function cmd(args, shortFlags, longFlags, inputValue) {
+					return (0, _aliases.aliasCommand)(args, shortFlags, longFlags, inputValue);
+				},
+				desc: translation["desc.alias"]
 			}
 		};
 	};
@@ -8632,6 +8649,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		"desc.clear": "Clears console",
 		"desc.clearHistory": "Clears history",
 		"desc.help": "This help",
+		"desc.alias": "Allows to set aliases for frequently used commands and expand them with TAB. Available arguments are: set, remove, remove-all, list",
 		"err.cmdNotFound": "Command not found",
 		"historyCleared": "History cleared"
 	};
@@ -8647,14 +8665,99 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 302 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	
 	Object.defineProperty(exports, "__esModule", {
-	  value: true
+		value: true
 	});
-	var styles = exports.styles = ".confront,.confront-input{font:13px/13px 'Inconsolata-g for Powerline',Inconsolata,Consolas,'Courier New',Courier,'Lucida Console',Monaco,monospace!important}.confront{background:rgba(24,53,74,.8);height:230px;position:fixed;bottom:0;left:0;right:0;padding:5px;border-top:solid 1px rgba(255,255,255,.3);overflow:auto}.confront-input{height:20px;width:100%;display:block;color:#83e216;background:0 0;border:none;margin:0;padding:0;outline:0}.confront-input::-ms-clear{display:none}.confront-cmd{color:#e5e5e5}.confront-error{color:#ff2614}.confront-default{color:#18d5ff}.confront-table{color:#83e216}.confront-table td{padding:2px 5px}.confront-table td:first-child{padding-left:0}.confront-label{color:#e5e5e5}.confront-value{color:#c3c3c3}.confront-spinner{width:18px;height:18px;border:2px solid rgba(131,226,22,.35);border-top:2px solid #83e216;border-radius:50%;animation:spin 1s linear infinite}.confront-output>pre{margin-top:3px;margin-bottom:3px}@keyframes spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}";
+	exports.getAlias = exports.aliasCommand = exports.initAliases = undefined;
+	
+	var _config = __webpack_require__(303);
+	
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+	
+	var aliases = {};
+	var storedAliases = JSON.parse(localStorage.getItem("aliases")) || {};
+	
+	var initAliases = function initAliases() {
+		aliases = Object.assign(storedAliases, _config.config.aliases);
+	};
+	
+	var setAlias = function setAlias(args, shortFlags, longFlags, inputValue) {
+		if (args.length < 3) {
+			throw new Error("to create alias write: \"alias set $<name_of_alias> <command>\"");
+		}
+		if (args[1][0] !== "$") {
+			throw new Error("Alias name must start with dollar sign ($)");
+		}
+		var aliasName = "" + args[1];
+		var parts = inputValue.split(" ");
+		Object.assign(aliases, _defineProperty({}, aliasName, parts.slice(3, parts.length).join(" ")));
+		localStorage.setItem("aliases", JSON.stringify(aliases));
+		return aliasName + " alias created successfully";
+	};
+	
+	var getAlias = function getAlias(alias) {
+		return aliases[alias] || alias;
+	};
+	
+	var removeAllAliases = function removeAllAliases() {
+		localStorage.removeItem("aliases");
+		aliases = _config.config.aliases;
+		return "Locally stored aliases removed successfully";
+	};
+	
+	var removeAlias = function removeAlias(args) {
+		var aliasToRemove = args[1];
+		if (aliasToRemove[0] !== "$") {
+			throw new Error("Alias name must start with dollar sign ($)");
+		}
+		if (!aliases[aliasToRemove]) {
+			throw new Error("This alias doesn't exist");
+		}
+		if (_config.config.aliases[aliasToRemove]) {
+			throw new Error("This is a pre-configured alias and can be removed only in code");
+		}
+	
+		delete aliases[aliasToRemove];
+		localStorage.setItem("aliases", JSON.stringify(aliases));
+		return "Alias removed";
+	};
+	
+	var listAliases = function listAliases() {
+		return aliases;
+	};
+	
+	var aliasCommand = function aliasCommand(args, shortFlags, longFlags, inputValue) {
+		switch (args[0]) {
+			case "set":
+				{
+					return setAlias(args, shortFlags, longFlags, inputValue);
+				}
+			case "list":
+				{
+					return listAliases();
+				}
+			case "remove-all":
+				{
+					return removeAllAliases();
+				}
+			case "remove":
+				{
+					return removeAlias(args);
+				}
+			default:
+				{
+					throw new Error(args[0] + " is not proper argument for alias command. See help for more information");
+				}
+		}
+	};
+	
+	exports.initAliases = initAliases;
+	exports.aliasCommand = aliasCommand;
+	exports.getAlias = getAlias;
 
 /***/ },
 /* 303 */
@@ -8672,7 +8775,8 @@ return /******/ (function(modules) { // webpackBootstrap
 		externalCSS: false,
 		shortcutActivator: "ctrl",
 		shortcutKeyCode: 192,
-		welcomeMessage: "Welcome to ConFront! Type in 'help' and press enter/return to see available commands"
+		welcomeMessage: "Welcome to ConFront! Type in 'help' and press enter/return to see available commands",
+		aliases: {}
 	};
 	
 	var initConfig = function initConfig(userConfig) {
@@ -8684,6 +8788,17 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 304 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var styles = exports.styles = ".confront,.confront-input{font:13px/13px 'Inconsolata-g for Powerline',Inconsolata,Consolas,'Courier New',Courier,'Lucida Console',Monaco,monospace!important}.confront{background:rgba(24,53,74,.8);height:320px;position:fixed;bottom:0;left:0;right:0;padding:5px;border-top:solid 1px rgba(255,255,255,.3);overflow:auto}.confront-input{height:20px;width:100%;display:block;color:#83e216;background:0 0;border:none;margin:0;padding:0;outline:0}.confront-input::-ms-clear{display:none}.confront-cmd{color:#e5e5e5}.confront-error{color:#ff2614}.confront-default{color:#18d5ff}.confront-table{color:#83e216}.confront-table td{padding:2px 5px;vertical-align:top}.confront-table td:first-child{padding-left:0}.confront-label{color:#e5e5e5}.confront-value{color:#c3c3c3}.confront-spinner{width:18px;height:18px;border:2px solid rgba(131,226,22,.35);border-top:2px solid #83e216;border-radius:50%;animation:spin 1s linear infinite}.confront-output>pre{margin-top:4px;margin-bottom:3px}@keyframes spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}";
+
+/***/ },
+/* 305 */
 /***/ function(module, exports) {
 
 	"use strict";
