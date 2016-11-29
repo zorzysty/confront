@@ -1,5 +1,6 @@
 import consoleState from "./consoleState";
 import {consoleDOMMethods} from "./consoleDOM";
+import {aliasCommand} from "./aliases";
 
 let tasks = {};
 
@@ -29,6 +30,10 @@ const getDefaultTasks = (translation) => {
 			cmd: () => displayHelp(),
 			desc: translation["desc.help"],
 			type: "html",
+		},
+		"alias": {
+			cmd: (args, shortFlags, longFlags, inputValue) => aliasCommand(args, shortFlags, longFlags, inputValue),
+			desc: translation["desc.alias"],
 		},
 	};
 };

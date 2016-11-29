@@ -3,6 +3,7 @@ import {consoleDOM, consoleDOMMethods} from "./consoleDOM";
 import {translation, initTranslation} from "./translation";
 import {config, initConfig} from "./config";
 import {tasks, initTasks} from "./tasks";
+import {initAliases} from "./aliases";
 import {getArgsAndFlags, checkType, extractCommandParts, isShortcutActivatorEnabled} from "./helpers";
 import consoleState from "./consoleState";
 
@@ -12,6 +13,7 @@ const ConFront = (userTasks, userConfig, userTranslation) => {
 		initConfig(userConfig);
 		initTranslation(userTranslation);
 		initTasks(userTasks, translation);
+		initAliases();
 
 		consoleState.loadHistoryFromLocalStorage();
 
@@ -88,7 +90,7 @@ const ConFront = (userTasks, userConfig, userTranslation) => {
 		}
 
 		try {
-			var cmdResult = tasks[cmd].cmd(args, shortFlags, longFlags);
+			var cmdResult = tasks[cmd].cmd(args, shortFlags, longFlags, inputValue);
 		}
 		catch (err) {
 			consoleDOMMethods.printLine(err, "error");

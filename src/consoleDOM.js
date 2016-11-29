@@ -1,4 +1,5 @@
 import {getTasksNames} from "./tasks";
+import {getAlias} from "./aliases";
 import {styles} from "./generated/styles";
 
 let consoleDOM = {};
@@ -94,6 +95,10 @@ const consoleDOMMethods = {
 		consoleDOMMethods.scrollToBottom();
 	},
 	autoComplete: () => {
+		if (consoleDOM.input.value[0] === "$") {
+			consoleDOMMethods.setInputValue(getAlias(consoleDOM.input.value));
+			return;
+		}
 		const tasks = getTasksNames();
 		const matching = tasks.filter((task) => {
 			return task.startsWith(consoleDOM.input.value);
@@ -103,7 +108,7 @@ const consoleDOMMethods = {
 		} else if (matching.length > 1) {
 			consoleDOMMethods.setInputValue(sharedStart(matching));
 		}
-	}
+	},
 };
 
 function sharedStart(array) {
