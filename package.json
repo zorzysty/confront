@@ -5,11 +5,11 @@
   "main": "dist/confront.js",
   "scripts": {
     "css": "./node_modules/.bin/lessc --clean-css ./src/confront.less ./dist/confront.css && npm run cssToJs",
-    "cssToJs": "mkdir -p ./src/generated && cp ./dist/confront.css ./src/generated/styles.js && node ./src/prepend.js && echo \\` >> ./src/generated/styles.js",
+    "cssToJs": "mkdir -p ./build && cp ./dist/confront.css ./build/styles.js && node ./src/prepend.js && echo \\` >> ./build/styles.js",
     "build": "npm run css && ./node_modules/.bin/webpack && mkdir -p ./build && cp ./src/index-build.html ./build/index.html && cp ./src/demo.css ./build",
     "build:demo": "mkdir -p ./demo && cp ./dist/confront.js ./demo && cp ./src/demo.css ./demo && cp ./src/index-demo.html ./demo/index.html",
     "build:bundle": "npm run build && npm run build:demo && npm run uglify",
-    "watch": "watch 'npm run build' ./src --ignoreDirectoryPattern /generated/",
+    "watch": "watch 'npm run build' ./src",
     "start": "./node_modules/.bin/http-server",
     "uglify": "./node_modules/.bin/uglifyjs ./dist/confront.js --compress --mangle --output ./dist/confront.min.js",
     "publish:patch": "npm run build:bundle && npm version patch && npm publish",

@@ -1,3 +1,3 @@
-var prependFile = require('prepend-file');
+var prependFile = require("prepend-file");
 
-prependFile('./src/generated/styles.js', 'export const styles =`');
+prependFile("build/styles.js", "export const styles =`");

@@ -1,6 +1,6 @@
 import {getTasksNames} from "./tasks";
 import {getAlias} from "./aliases";
-import {styles} from "./generated/styles";
+import {styles} from "../build/styles";
 
 let consoleDOM = {};
 
